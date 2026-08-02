@@ -5,10 +5,18 @@ class User < ApplicationRecord
 
   validates :email, presence: true, uniqueness: true
   validates :name, presence: true, format: { with: /\A[\p{L}\p{M}]+(?:[\p{L}\p{M} '\-’.]*[\p{L}\p{M}])?\.?\z/u }
-  validates :password, presence: true, length: { minimum: 8 }
+  validates :password, length: { minimum: 8 }, if: -> { password.present? }
   validates :cpf, presence: true, uniqueness: true
 
   # validators gem
   validates_email :email
   validates_cpf :cpf
+
+  def as_json(options = {})
+    super do
+      options.merge(
+        except: [ :password_digest, :created_at, :updated_at ]
+      )
+    end
+  end
 end

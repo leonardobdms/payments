@@ -47,6 +47,7 @@ RSpec.configure do |config|
   config.use_transactional_fixtures = true
 
   config.include FactoryBot::Syntax::Methods
+  config.include AuthHelpers, type: :request
 
   config.before(:suite) do
     FactoryBot.find_definitions
