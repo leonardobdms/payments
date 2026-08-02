@@ -49,9 +49,24 @@ group :development, :test do
   gem "rubocop-rails-omakase", require: false
 
   gem "rspec-rails"
+
   gem "factory_bot"
+
+  gem "faker", "~> 3.8"
+
+  gem "pry-rails", "~> 0.3.11"
+
+  gem "pry", "~> 0.16.0"
 end
 
 gem "dotenv", "~> 3.2"
 
 gem "jwt", "~> 3.2"
+
+gem "validators", "~> 3.4"
+
+gem "cpf_cnpj"
+
+gem "root_domain"
+
+gem "email_data"
