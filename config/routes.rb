@@ -12,6 +12,7 @@ Rails.application.routes.draw do
       namespace :users, path: "/" do
         post "register", to: "registrations#create"
         post "login", to: "sessions#create"
+        post "refresh", to: "sessions#refresh"
         delete "logout", to: "sessions#destroy"
 
         resource :me, only: %i[show update destroy], controller: "me"

@@ -19,8 +19,13 @@ class Api::V1::Users::RegistrationsController < ApplicationController
 
   def render_created
     render json: {
-      token: AuthToken.encode({ user_id: user.id }),
+      token: tokens[:access_token],
+      refresh_token: tokens[:refresh_token],
       user: user.as_json
     }, status: :created
+  end
+
+  def tokens
+    @tokens ||= AuthToken::Refresh.new(user:).issue
   end
 end

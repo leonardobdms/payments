@@ -19,10 +19,10 @@ paths:
               examples:
                 example:
                   value:
-                    id: 199
-                    cpf: '04145968468'
-                    email: markus@streich-anderson.example
-                    name: Dr. Angel Watsica
+                    id: 203
+                    cpf: '04215592259'
+                    email: oscar@bruen-kulas.test
+                    name: Janie Jakubowski
         '401':
           description: Unauthorized
           content:
@@ -47,9 +47,9 @@ paths:
                 example:
                   value:
                     name: Novo Nome
-                    email: ronnie.moore@hagenes.example
-                    cpf: '06016692239'
-                    id: 200
+                    email: roy_kunze@rosenbaum.example
+                    cpf: '07977492768'
+                    id: 204
         '401':
           description: Unauthorized
           content:
@@ -125,11 +125,12 @@ paths:
               examples:
                 example:
                   value:
-                    token: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyMDMsImV4cCI6MTc4NTgwODI0M30.i4yGMti4xXURacDnYyL3pXISOG5sjxmbWMGI2eKMn84
+                    token: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyMDcsImV4cCI6MTc4NTcyODE3NH0.39Xo4kbNGnUKEpUWFwryN09GR1Ys4RMByxxvAp5yAgM
+                    refresh_token: TU_F7FRBFWhtazlAGEW5VRhslGI8Qa6qhEPmRhFDBoM
                     user:
-                      id: 203
-                      cpf: '02381209298'
-                      email: edgardo_kassulke@west.test
+                      id: 207
+                      cpf: '07465317614'
+                      email: felton_hahn@kuhlman.example
                       name: Novo Usuario
         '422':
           description: Unprocessable Content
@@ -184,12 +185,13 @@ paths:
               examples:
                 example:
                   value:
-                    token: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyMDUsImV4cCI6MTc4NTgwODI0M30.Wgh8ah0LRKB_KIu6CqGJG7StOpe2lsN8l8fXWROjSdA
+                    token: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyMDksImV4cCI6MTc4NTcyODE3NH0.GLwnHcqF9IEDHBap67w4FS4AJZN1mmG69yM0FnOrBxY
+                    refresh_token: XeX7YFgN3R0s3qH874Vw6jm3TG1202DiYjJ6teVhVN8
                     user:
-                      id: 205
-                      cpf: '01544504136'
-                      email: alverta@goldner.test
-                      name: Letha Lynch JD
+                      id: 209
+                      cpf: '07880297030'
+                      email: kaila@sipes.example
+                      name: Rev. Eusebia Pfeffer
         '401':
           description: Unauthorized
           content:
@@ -216,6 +218,40 @@ paths:
                   - password
               required:
               - user
+  "/api/v1/refresh":
+    post:
+      summary: Refresh access and refresh tokens
+      tags:
+      - Users
+      parameters: []
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              examples:
+                example:
+                  value:
+                    token: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyMTEsImV4cCI6MTc4NTcyODE3NH0.el-d18qkvBlnj6mvkyxJFaHylo-_WAMpElnw820tdb8
+                    refresh_token: fLecevVUyG_QgPo_zfoLbt0FzVZ5X6WSO2APPgEq53c
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              examples:
+                example:
+                  value:
+                    error: Unauthorized
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                refresh_token:
+                  type: string
+              required:
+              - refresh_token
   "/api/v1/logout":
     delete:
       summary: Logout current user
@@ -223,6 +259,7 @@ paths:
       - Users
       security:
       - BearerAuth: []
+      parameters: []
       responses:
         '204':
           description: No Content
@@ -239,6 +276,16 @@ paths:
                 example:
                   value:
                     error: Unauthorized
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                refresh_token:
+                  type: string
+              required:
+              - refresh_token
 servers:
 - url: https://{defaultHost}
   variables:

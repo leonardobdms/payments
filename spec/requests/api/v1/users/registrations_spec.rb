@@ -45,16 +45,17 @@ RSpec.describe "Api::V1::Users::Registrations", type: :request do
 
           run_test! do |response|
             expect(response).to have_http_status(:created)
-            expect(response.parsed_body).to include("token", "user")
+            expect(response.parsed_body).to include("token", "refresh_token", "user")
             expect(response.parsed_body["user"]).to include(
               "email" => email,
               "name" => "Novo Usuario",
               "cpf" => cpf
             )
             expect(response.parsed_body["user"].keys).not_to include("password_digest")
-            expect(AuthToken.decode(response.parsed_body["token"])[:user_id]).to eq(
+            expect(AuthToken::Token.decode(response.parsed_body["token"])[:user_id]).to eq(
               response.parsed_body["user"]["id"]
             )
+            expect(User.find(response.parsed_body["user"]["id"]).refresh_tokens.count).to eq(1)
           end
         end
 

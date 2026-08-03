@@ -18,7 +18,7 @@ class ApplicationController < ActionController::API
   end
 
   def token_decoded
-    @token_decoded ||= AuthToken.decode(token)
+    @token_decoded ||= AuthToken::Token.decode(token)
   end
 
   def render_unauthorized
