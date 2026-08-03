@@ -2,11 +2,11 @@ require "rails_helper"
 
 RSpec.describe AuthToken do
   describe ".encode / .decode" do
-    it "round-trips a payload with RS256" do
+    it "round-trips a payload with HS256" do
       token = described_class.encode({ user_id: 42 })
       header = JWT.decode(token, nil, false).last
 
-      expect(header["alg"]).to eq("RS256")
+      expect(header["alg"]).to eq("HS256")
 
       decoded = described_class.decode(token)
       expect(decoded[:user_id]).to eq(42)

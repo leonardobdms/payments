@@ -1,39 +1,31 @@
 class AuthToken
   class << self
     def encode(payload, exp: 24.hours.from_now)
-      payload = payload.dup
-      payload[:exp] = exp.to_i
-      JWT.encode(payload, private_key, "RS256")
+      JWT.encode(payload_with_expiration(payload, exp), secret, "HS256")
     end
 
     def decode(token)
-      body = JWT.decode(token, public_key, true, algorithm: "RS256")[0]
-      ActiveSupport::HashWithIndifferentAccess.new(body)
+      indifferent_access_hash(decoded_payload(token))
     rescue JWT::DecodeError, JWT::ExpiredSignature
       nil
     end
 
     private
 
-    def private_key
-      @private_key ||= rsa_from_env("JWT_PRIVATE_KEY") || fallback_keypair
+    def payload_with_expiration(payload, exp)
+      payload.dup.merge(exp: exp.to_i)
     end
 
-    def public_key
-      @public_key ||= rsa_from_env("JWT_PUBLIC_KEY") || private_key.public_key
+    def decoded_payload(token)
+      JWT.decode(token, secret, true, algorithm: "HS256").first
     end
 
-    def rsa_from_env(name)
-      pem = ENV[name].presence
-      return if pem.blank?
-
-      OpenSSL::PKey::RSA.new(pem.gsub("\\n", "\n"))
+    def indifferent_access_hash(payload)
+      ActiveSupport::HashWithIndifferentAccess.new(payload)
     end
 
-    def fallback_keypair
-      raise "JWT_PRIVATE_KEY and JWT_PUBLIC_KEY must be set" if Rails.env.production?
-
-      @fallback_keypair ||= OpenSSL::PKey::RSA.generate(2048)
+    def secret
+      ENV.fetch("JWT_SECRET", "")
     end
   end
 end
