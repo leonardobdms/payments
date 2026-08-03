@@ -19,7 +19,7 @@ class Api::V1::Users::RegistrationsController < ApplicationController
 
   def render_created
     render json: {
-      token: Jwt::TokenService.encode({ user_id: user.id }),
+      token: AuthToken.encode({ user_id: user.id }),
       user: user.as_json
     }, status: :created
   end

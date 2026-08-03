@@ -50,6 +50,8 @@ group :development, :test do
 
   gem "rspec-rails"
 
+  gem "rswag-specs", "~> 2.17"
+
   gem "factory_bot"
 
   gem "faker", "~> 3.8"
@@ -70,3 +72,7 @@ gem "cpf_cnpj"
 gem "root_domain"
 
 gem "email_data"
+
+gem "rswag-api", "~> 2.17"
+
+gem "rswag-ui", "~> 2.17"

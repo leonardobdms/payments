@@ -1,0 +1,252 @@
+---
+openapi: 3.0.1
+info:
+  title: API V1
+  version: v1
+paths:
+  "/api/v1/me":
+    get:
+      summary: Get my profile information
+      tags:
+      - Users
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              examples:
+                example:
+                  value:
+                    id: 154
+                    cpf: '02919242806'
+                    email: andrew.weissnat@okon.test
+                    name: Ramon Rosenbaum
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              examples:
+                example:
+                  value:
+                    error: Unauthorized
+    patch:
+      summary: Update my profile information
+      tags:
+      - Users
+      security:
+      - BearerAuth: []
+      parameters: []
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              examples:
+                example:
+                  value:
+                    name: Novo Nome
+                    email: hung_gusikowski@klocko.example
+                    cpf: '07018645166'
+                    id: 155
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              examples:
+                example:
+                  value:
+                    error: Unauthorized
+        '422':
+          description: Unprocessable Content
+          content:
+            application/json:
+              examples:
+                example:
+                  value:
+                    errors:
+                      email:
+                      - is not a valid address
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user:
+                  type: object
+                  properties:
+                    email:
+                      type: string
+                    name:
+                      type: string
+                    cpf:
+                      type: string
+                    password:
+                      type: string
+                    password_confirmation:
+                      type: string
+              required:
+              - user
+    delete:
+      summary: Delete my account
+      tags:
+      - Users
+      security:
+      - BearerAuth: []
+      responses:
+        '204':
+          description: Success
+          content:
+            application/json:
+              examples:
+                example:
+                  value: ''
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              examples:
+                example:
+                  value:
+                    error: Unauthorized
+  "/api/v1/register":
+    post:
+      summary: Create a new user account
+      tags:
+      - Users
+      parameters: []
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              examples:
+                example:
+                  value:
+                    token: eyJhbGciOiJSUzI1NiJ9.eyJ1c2VyX2lkIjoxNTgsImV4cCI6MTc4NTgwNjQxMH0.r-7TGCml8VsAV2sH9pz5DR8t5KzHjOiXcqI1vOt1irhh5IKbCv47Ugy9oz89TPD8YmsAAbEB-vmTxijwF1jZvHveFQyTHFBmEEqrtb63-Kw88xpuuA1HmrrozdleeSSdL9_VB799wZHHKZtcu0Oo6YK20H8fFLWfO3vqnxoTHRSdt7KF2iKp_9R2idS64DpObK27kEd5-7BNBrPKs4NZdoyyvT4N_JJMEBmIrweYev18gRHyAyw7spaTYyyT3YYqMAcZ8nPGK5RMHf2RqHjSK35ev2eLpFemo9cnEcvfttAnKthhRVmo48o7PIfYS5Z5Ts9VbRdwXGP_JE6LtP3fZg
+                    user:
+                      id: 158
+                      cpf: '00238955788'
+                      email: brooke@stroman.example
+                      name: Novo Usuario
+        '422':
+          description: Unprocessable Content
+          content:
+            application/json:
+              examples:
+                example:
+                  value:
+                    errors:
+                      email:
+                      - has already been taken
+                      cpf:
+                      - has already been taken
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user:
+                  type: object
+                  properties:
+                    email:
+                      type: string
+                    name:
+                      type: string
+                    cpf:
+                      type: string
+                    password:
+                      type: string
+                    password_confirmation:
+                      type: string
+                  required:
+                  - email
+                  - name
+                  - cpf
+                  - password
+                  - password_confirmation
+              required:
+              - user
+  "/api/v1/login":
+    post:
+      summary: Authenticate user and return token
+      tags:
+      - Users
+      parameters: []
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              examples:
+                example:
+                  value:
+                    token: eyJhbGciOiJSUzI1NiJ9.eyJ1c2VyX2lkIjoxNjAsImV4cCI6MTc4NTgwNjQxMH0.CpYstzEs6lZjspNzQuxpiwXidCpjb9Vzg-rvxt7CdKRB68jzBJdYW_Gi5V2RsammrVyw6VKPziw6S70K7lkY6VYCuIvfspykVCqXwrPysjaBH5rDlnLBnNtqPLuPUllMFx6blSzN__EBvusPNaivn8cdGM3K3hffxAj4s9-VEGAawDf0jmKIwkmqrxTRU6O3-7WhHs44WvssSbu6ne1LuB33WQYqj4MSEBrRbq2pS0zS4I0wIXECSVN0VYhn-m9_Q92diPMexAl7rJdec1MvVly-ufKsX87ZUmzSwq3xMAVQNljQII_TXqrbIXNKIhs53JcBog9L5pWccrBEzqPTHA
+                    user:
+                      id: 160
+                      cpf: '00492105138'
+                      email: demetra.mayert@dare.test
+                      name: Kirk Schiller
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              examples:
+                example:
+                  value:
+                    error: Unauthorized
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user:
+                  type: object
+                  properties:
+                    email:
+                      type: string
+                    password:
+                      type: string
+                  required:
+                  - email
+                  - password
+              required:
+              - user
+  "/api/v1/logout":
+    delete:
+      summary: Logout current user
+      tags:
+      - Users
+      security:
+      - BearerAuth: []
+      responses:
+        '204':
+          description: Success
+          content:
+            application/json:
+              examples:
+                example:
+                  value: ''
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              examples:
+                example:
+                  value:
+                    error: Unauthorized
+servers:
+- url: https://{defaultHost}
+  variables:
+    defaultHost:
+      default: localhost:3000
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      in: header

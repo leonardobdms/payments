@@ -1,8 +1,8 @@
-class Api::V1::SessionsController < ApplicationController
+class Api::V1::Users::SessionsController < ApplicationController
   before_action :authenticate_user!, only: :destroy
 
   def create
-    render_unauthorized unless user.authenticate(user_credential_params[:password])
+    return render_unauthorized unless user&.authenticate(user_credential_params[:password])
 
     render_authenticated
   end
@@ -25,7 +25,7 @@ class Api::V1::SessionsController < ApplicationController
 
   def render_authenticated
     render json: {
-      token: Jwt::TokenService.encode({ user_id: user.id }),
+      token: AuthToken.encode({ user_id: user.id }),
       user: user.as_json
     }, status: :ok
   end

@@ -13,10 +13,6 @@ class User < ApplicationRecord
   validates_cpf :cpf
 
   def as_json(options = {})
-    super do
-      options.merge(
-        except: [ :password_digest, :created_at, :updated_at ]
-      )
-    end
+    super(options.merge(except: [ :password_digest, :created_at, :updated_at ]))
   end
 end
