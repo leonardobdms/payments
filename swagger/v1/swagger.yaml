@@ -19,10 +19,10 @@ paths:
               examples:
                 example:
                   value:
-                    id: 154
-                    cpf: '02919242806'
-                    email: andrew.weissnat@okon.test
-                    name: Ramon Rosenbaum
+                    id: 199
+                    cpf: '04145968468'
+                    email: markus@streich-anderson.example
+                    name: Dr. Angel Watsica
         '401':
           description: Unauthorized
           content:
@@ -47,9 +47,9 @@ paths:
                 example:
                   value:
                     name: Novo Nome
-                    email: hung_gusikowski@klocko.example
-                    cpf: '07018645166'
-                    id: 155
+                    email: ronnie.moore@hagenes.example
+                    cpf: '06016692239'
+                    id: 200
         '401':
           description: Unauthorized
           content:
@@ -97,7 +97,7 @@ paths:
       - BearerAuth: []
       responses:
         '204':
-          description: Success
+          description: No Content
           content:
             application/json:
               examples:
@@ -125,11 +125,11 @@ paths:
               examples:
                 example:
                   value:
-                    token: eyJhbGciOiJSUzI1NiJ9.eyJ1c2VyX2lkIjoxNTgsImV4cCI6MTc4NTgwNjQxMH0.r-7TGCml8VsAV2sH9pz5DR8t5KzHjOiXcqI1vOt1irhh5IKbCv47Ugy9oz89TPD8YmsAAbEB-vmTxijwF1jZvHveFQyTHFBmEEqrtb63-Kw88xpuuA1HmrrozdleeSSdL9_VB799wZHHKZtcu0Oo6YK20H8fFLWfO3vqnxoTHRSdt7KF2iKp_9R2idS64DpObK27kEd5-7BNBrPKs4NZdoyyvT4N_JJMEBmIrweYev18gRHyAyw7spaTYyyT3YYqMAcZ8nPGK5RMHf2RqHjSK35ev2eLpFemo9cnEcvfttAnKthhRVmo48o7PIfYS5Z5Ts9VbRdwXGP_JE6LtP3fZg
+                    token: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyMDMsImV4cCI6MTc4NTgwODI0M30.i4yGMti4xXURacDnYyL3pXISOG5sjxmbWMGI2eKMn84
                     user:
-                      id: 158
-                      cpf: '00238955788'
-                      email: brooke@stroman.example
+                      id: 203
+                      cpf: '02381209298'
+                      email: edgardo_kassulke@west.test
                       name: Novo Usuario
         '422':
           description: Unprocessable Content
@@ -184,12 +184,12 @@ paths:
               examples:
                 example:
                   value:
-                    token: eyJhbGciOiJSUzI1NiJ9.eyJ1c2VyX2lkIjoxNjAsImV4cCI6MTc4NTgwNjQxMH0.CpYstzEs6lZjspNzQuxpiwXidCpjb9Vzg-rvxt7CdKRB68jzBJdYW_Gi5V2RsammrVyw6VKPziw6S70K7lkY6VYCuIvfspykVCqXwrPysjaBH5rDlnLBnNtqPLuPUllMFx6blSzN__EBvusPNaivn8cdGM3K3hffxAj4s9-VEGAawDf0jmKIwkmqrxTRU6O3-7WhHs44WvssSbu6ne1LuB33WQYqj4MSEBrRbq2pS0zS4I0wIXECSVN0VYhn-m9_Q92diPMexAl7rJdec1MvVly-ufKsX87ZUmzSwq3xMAVQNljQII_TXqrbIXNKIhs53JcBog9L5pWccrBEzqPTHA
+                    token: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyMDUsImV4cCI6MTc4NTgwODI0M30.Wgh8ah0LRKB_KIu6CqGJG7StOpe2lsN8l8fXWROjSdA
                     user:
-                      id: 160
-                      cpf: '00492105138'
-                      email: demetra.mayert@dare.test
-                      name: Kirk Schiller
+                      id: 205
+                      cpf: '01544504136'
+                      email: alverta@goldner.test
+                      name: Letha Lynch JD
         '401':
           description: Unauthorized
           content:
@@ -225,7 +225,7 @@ paths:
       - BearerAuth: []
       responses:
         '204':
-          description: Success
+          description: No Content
           content:
             application/json:
               examples:

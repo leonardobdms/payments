@@ -63,7 +63,7 @@ RSpec.describe "Api::V1::Users::Sessions", type: :request do
 
         security [ BearerAuth: [] ]
 
-        response "204", "Success" do
+        response "204", "No Content" do
           let(:Authorization) { auth_headers(user)["Authorization"] }
 
           run_test! do |response|
