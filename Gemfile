@@ -10,7 +10,7 @@ gem "puma", ">= 5.0"
 # gem "jbuilder"
 
 # Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
-# gem "bcrypt", "~> 3.1.7"
+gem "bcrypt", "~> 3.1.7"
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem "tzinfo-data", platforms: %i[ windows jruby ]
@@ -49,7 +49,30 @@ group :development, :test do
   gem "rubocop-rails-omakase", require: false
 
   gem "rspec-rails"
+
+  gem "rswag-specs", "~> 2.17"
+
   gem "factory_bot"
+
+  gem "faker", "~> 3.8"
+
+  gem "pry-rails", "~> 0.3.11"
+
+  gem "pry", "~> 0.16.0"
 end
 
 gem "dotenv", "~> 3.2"
+
+gem "jwt", "~> 3.2"
+
+gem "validators", "~> 3.4"
+
+gem "cpf_cnpj"
+
+gem "root_domain"
+
+gem "email_data"
+
+gem "rswag-api", "~> 2.17"
+
+gem "rswag-ui", "~> 2.17"

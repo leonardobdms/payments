@@ -1,0 +1,299 @@
+---
+openapi: 3.0.1
+info:
+  title: API V1
+  version: v1
+paths:
+  "/api/v1/me":
+    get:
+      summary: Get my profile information
+      tags:
+      - Users
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              examples:
+                example:
+                  value:
+                    id: 203
+                    cpf: '04215592259'
+                    email: oscar@bruen-kulas.test
+                    name: Janie Jakubowski
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              examples:
+                example:
+                  value:
+                    error: Unauthorized
+    patch:
+      summary: Update my profile information
+      tags:
+      - Users
+      security:
+      - BearerAuth: []
+      parameters: []
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              examples:
+                example:
+                  value:
+                    name: Novo Nome
+                    email: roy_kunze@rosenbaum.example
+                    cpf: '07977492768'
+                    id: 204
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              examples:
+                example:
+                  value:
+                    error: Unauthorized
+        '422':
+          description: Unprocessable Content
+          content:
+            application/json:
+              examples:
+                example:
+                  value:
+                    errors:
+                      email:
+                      - is not a valid address
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user:
+                  type: object
+                  properties:
+                    email:
+                      type: string
+                    name:
+                      type: string
+                    cpf:
+                      type: string
+                    password:
+                      type: string
+                    password_confirmation:
+                      type: string
+              required:
+              - user
+    delete:
+      summary: Delete my account
+      tags:
+      - Users
+      security:
+      - BearerAuth: []
+      responses:
+        '204':
+          description: No Content
+          content:
+            application/json:
+              examples:
+                example:
+                  value: ''
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              examples:
+                example:
+                  value:
+                    error: Unauthorized
+  "/api/v1/register":
+    post:
+      summary: Create a new user account
+      tags:
+      - Users
+      parameters: []
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              examples:
+                example:
+                  value:
+                    token: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyMDcsImV4cCI6MTc4NTcyODE3NH0.39Xo4kbNGnUKEpUWFwryN09GR1Ys4RMByxxvAp5yAgM
+                    refresh_token: TU_F7FRBFWhtazlAGEW5VRhslGI8Qa6qhEPmRhFDBoM
+                    user:
+                      id: 207
+                      cpf: '07465317614'
+                      email: felton_hahn@kuhlman.example
+                      name: Novo Usuario
+        '422':
+          description: Unprocessable Content
+          content:
+            application/json:
+              examples:
+                example:
+                  value:
+                    errors:
+                      email:
+                      - has already been taken
+                      cpf:
+                      - has already been taken
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user:
+                  type: object
+                  properties:
+                    email:
+                      type: string
+                    name:
+                      type: string
+                    cpf:
+                      type: string
+                    password:
+                      type: string
+                    password_confirmation:
+                      type: string
+                  required:
+                  - email
+                  - name
+                  - cpf
+                  - password
+                  - password_confirmation
+              required:
+              - user
+  "/api/v1/login":
+    post:
+      summary: Authenticate user and return token
+      tags:
+      - Users
+      parameters: []
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              examples:
+                example:
+                  value:
+                    token: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyMDksImV4cCI6MTc4NTcyODE3NH0.GLwnHcqF9IEDHBap67w4FS4AJZN1mmG69yM0FnOrBxY
+                    refresh_token: XeX7YFgN3R0s3qH874Vw6jm3TG1202DiYjJ6teVhVN8
+                    user:
+                      id: 209
+                      cpf: '07880297030'
+                      email: kaila@sipes.example
+                      name: Rev. Eusebia Pfeffer
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              examples:
+                example:
+                  value:
+                    error: Unauthorized
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user:
+                  type: object
+                  properties:
+                    email:
+                      type: string
+                    password:
+                      type: string
+                  required:
+                  - email
+                  - password
+              required:
+              - user
+  "/api/v1/refresh":
+    post:
+      summary: Refresh access and refresh tokens
+      tags:
+      - Users
+      parameters: []
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              examples:
+                example:
+                  value:
+                    token: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyMTEsImV4cCI6MTc4NTcyODE3NH0.el-d18qkvBlnj6mvkyxJFaHylo-_WAMpElnw820tdb8
+                    refresh_token: fLecevVUyG_QgPo_zfoLbt0FzVZ5X6WSO2APPgEq53c
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              examples:
+                example:
+                  value:
+                    error: Unauthorized
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                refresh_token:
+                  type: string
+              required:
+              - refresh_token
+  "/api/v1/logout":
+    delete:
+      summary: Logout current user
+      tags:
+      - Users
+      security:
+      - BearerAuth: []
+      parameters: []
+      responses:
+        '204':
+          description: No Content
+          content:
+            application/json:
+              examples:
+                example:
+                  value: ''
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              examples:
+                example:
+                  value:
+                    error: Unauthorized
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                refresh_token:
+                  type: string
+              required:
+              - refresh_token
+servers:
+- url: https://{defaultHost}
+  variables:
+    defaultHost:
+      default: localhost:3000
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      in: header
