@@ -61,6 +61,10 @@ group :development, :test do
   gem "pry", "~> 0.16.0"
 end
 
+group :test do
+  gem "simplecov", require: false
+end
+
 gem "dotenv", "~> 3.2"
 
 gem "jwt", "~> 3.2"
