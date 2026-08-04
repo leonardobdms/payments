@@ -2,7 +2,7 @@ FactoryBot.define do
   factory :merchant do
     user
     legal_name { Faker::Company.name }
-    document { user.cpf.gsub(/\D/, "") }
+    document { create(:user).cpf.gsub(/\D/, "") }
 
     trait :with_balances do
       after(:create) do |merchant|
