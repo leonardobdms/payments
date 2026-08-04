@@ -1,5 +1,19 @@
 module AuthToken
   class Refresh
+    class << self
+      def issue_for(user)
+        new(user: user).issue
+      end
+
+      def rotate(token, user: nil)
+        new(token: token, user: user).refresh!
+      end
+
+      def revoke(token, user: nil)
+        new(token: token, user: user).revoke!
+      end
+    end
+
     def initialize(token: nil, user: nil)
       @token = token
       @user = user

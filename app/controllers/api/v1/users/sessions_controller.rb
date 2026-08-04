@@ -4,22 +4,21 @@ class Api::V1::Users::SessionsController < ApplicationController
   def create
     return render_unauthorized unless user&.authenticate(user_credential_params[:password])
 
-    render_authenticated
+    tokens = AuthToken::Refresh.issue_for(user)
+
+    render json: { **tokens, user: UserSerializer.render(user) }, status: :ok
   end
 
   def refresh
-    tokens = AuthToken::Refresh.new(token: refresh_token_param).refresh!
+    tokens = AuthToken::Refresh.rotate(refresh_token_param)
+
     return render_unauthorized if tokens.blank?
 
-    render json: {
-      token: tokens[:access_token],
-      refresh_token: tokens[:refresh_token]
-    }, status: :ok
+    render json: { **tokens }, status: :ok
   end
 
   def destroy
-    revoked = AuthToken::Refresh.new(token: refresh_token_param, user: current_user).revoke!
-    return render_unauthorized unless revoked
+    return render_unauthorized unless AuthToken::Refresh.revoke(refresh_token_param, user: current_user)
 
     head :no_content
   end
@@ -38,16 +37,5 @@ class Api::V1::Users::SessionsController < ApplicationController
 
   def user
     @user ||= User.find_by(email: user_credential_params[:email])
-  end
-
-  def render_authenticated
-    tokens = AuthToken::Refresh.new(user: user).issue
-
-
-    render json: {
-      token: tokens[:access_token],
-      refresh_token: tokens[:refresh_token],
-      user: user.as_json
-    }, status: :ok
   end
 end

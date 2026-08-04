@@ -1,8 +1,10 @@
 class Api::V1::Users::RegistrationsController < ApplicationController
   def create
-    return render_created if user.save
+    return render_unprocessable_content(user.errors) unless user.save
 
-    render_unprocessable_content(user.errors)
+    tokens = AuthToken::Refresh.issue_for(user)
+
+    render json: { **tokens, user: UserSerializer.render(user) }, status: :created
   end
 
   private
@@ -15,17 +17,5 @@ class Api::V1::Users::RegistrationsController < ApplicationController
 
   def user
     @user ||= User.new(registration_params)
-  end
-
-  def render_created
-    render json: {
-      token: tokens[:access_token],
-      refresh_token: tokens[:refresh_token],
-      user: user.as_json
-    }, status: :created
-  end
-
-  def tokens
-    @tokens ||= AuthToken::Refresh.new(user:).issue
   end
 end

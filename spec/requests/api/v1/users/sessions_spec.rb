@@ -32,7 +32,7 @@ RSpec.describe "Api::V1::Users::Sessions", type: :request do
 
           run_test! do |response|
             expect(response).to have_http_status(:ok)
-            expect(response.parsed_body).to include("token", "refresh_token", "user")
+            expect(response.parsed_body).to include("access_token", "refresh_token", "user")
             expect(response.parsed_body["user"]).to include(
               "id" => user.id,
               "email" => user.email,
@@ -40,7 +40,7 @@ RSpec.describe "Api::V1::Users::Sessions", type: :request do
               "cpf" => user.cpf
             )
             expect(response.parsed_body["user"].keys).not_to include("password_digest")
-            expect(AuthToken::Token.decode(response.parsed_body["token"])[:user_id]).to eq(user.id)
+            expect(AuthToken::Token.decode(response.parsed_body["access_token"])[:user_id]).to eq(user.id)
             expect(user.refresh_tokens.count).to eq(1)
           end
         end
@@ -79,9 +79,9 @@ RSpec.describe "Api::V1::Users::Sessions", type: :request do
 
           run_test! do |response|
             expect(response).to have_http_status(:ok)
-            expect(response.parsed_body).to include("token", "refresh_token")
+            expect(response.parsed_body).to include("access_token", "refresh_token")
             expect(response.parsed_body["refresh_token"]).not_to eq(tokens[:refresh_token])
-            expect(AuthToken::Token.decode(response.parsed_body["token"])[:user_id]).to eq(user.id)
+            expect(AuthToken::Token.decode(response.parsed_body["access_token"])[:user_id]).to eq(user.id)
             expect(AuthToken::Refresh.new(token: tokens[:refresh_token]).refresh!).to be_nil
           end
         end
