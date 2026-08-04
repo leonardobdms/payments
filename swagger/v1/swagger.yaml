@@ -20,9 +20,9 @@ paths:
               examples:
                 example:
                   value:
-                    id: 155
+                    id: 270
                     legal_name: Segunda Loja
-                    document: '02945835487'
+                    document: '54550752000155'
                     status: active
                     account:
                       currency: BRL
@@ -47,7 +47,7 @@ paths:
                       legal_name:
                       - can't be blank
                       document:
-                      - can't be blank
+                      - is not a valid CNPJ
       requestBody:
         content:
           application/json:
@@ -80,17 +80,17 @@ paths:
               examples:
                 example:
                   value:
-                  - id: 156
-                    legal_name: Anderson, Batz and Lind
-                    document: '05670444248'
+                  - id: 271
+                    legal_name: Leffler, Schmidt and Quigley
+                    document: T2NG7TT1QLNN42
                     status: active
                     account:
                       currency: BRL
                       available_balance_cents: 0
                       pending_balance_cents: 0
-                  - id: 157
-                    legal_name: Runolfsson Inc
-                    document: '03375483821'
+                  - id: 272
+                    legal_name: Raynor, Ward and King
+                    document: U9V7JXT8VXF845
                     status: active
                     account:
                       currency: BRL
@@ -125,9 +125,9 @@ paths:
               examples:
                 example:
                   value:
-                    id: 158
-                    legal_name: Mraz-Daugherty
-                    document: '05886445870'
+                    id: 273
+                    legal_name: Osinski-Hauck
+                    document: 452AQ9WDJHKN15
                     status: active
                     account:
                       currency: BRL
@@ -169,9 +169,9 @@ paths:
               examples:
                 example:
                   value:
-                    id: 160
+                    id: 275
                     legal_name: Novo Nome
-                    document: '04427531288'
+                    document: UPIC4CXRBAG737
                     status: active
                     account:
                       currency: BRL
@@ -220,7 +220,7 @@ paths:
     get:
       summary: Get my profile information
       tags:
-      - Users
+      - Users - Me
       security:
       - BearerAuth: []
       responses:
@@ -231,10 +231,10 @@ paths:
               examples:
                 example:
                   value:
-                    id: 644
-                    email: natasha.maggio@torp.test
-                    name: Williams Rippin
-                    cpf: '06947106281'
+                    id: 1128
+                    email: henrietta@weissnat.example
+                    name: Joane Kerluke
+                    cpf: '04906160620'
         '401':
           description: Unauthorized
           content:
@@ -246,7 +246,7 @@ paths:
     patch:
       summary: Update my profile information
       tags:
-      - Users
+      - Users - Me
       security:
       - BearerAuth: []
       parameters: []
@@ -258,10 +258,10 @@ paths:
               examples:
                 example:
                   value:
-                    id: 645
-                    email: kenna@shields.example
+                    id: 1129
+                    email: shakita.pacocha@gorczany.example
                     name: Novo Nome
-                    cpf: '00999005480'
+                    cpf: '07746983812'
         '401':
           description: Unauthorized
           content:
@@ -304,7 +304,7 @@ paths:
     delete:
       summary: Delete my account
       tags:
-      - Users
+      - Users - Me
       security:
       - BearerAuth: []
       responses:
@@ -327,7 +327,7 @@ paths:
     post:
       summary: Create a new user account
       tags:
-      - Users
+      - Users - Register
       parameters: []
       responses:
         '201':
@@ -337,13 +337,13 @@ paths:
               examples:
                 example:
                   value:
-                    access_token: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjo2NDgsImV4cCI6MTc4NTg1NTAyMn0.cBQ3W-Np1wFtEVVIbyxF-y7_iH5jzwgJJjXWgNEc0VY
-                    refresh_token: mnT_7_neZ7Ut6yOLRlUefXZlrNbuuntaEUL-NCO3tDE
+                    access_token: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxMTMyLCJleHAiOjE3ODU4NjU5OTd9.sQ57t4Irj5Eiwc3BIIGr9PH0VVHC5Cc9u_2Xv2G9YoI
+                    refresh_token: EkKAFB3wzevXhjK_LXwjblArn4kGfaLDSHwmQwHazTk
                     user:
-                      id: 648
-                      email: april_jerde@wisozk.test
+                      id: 1132
+                      email: erlene@hudson-konopelski.example
                       name: Novo Usuario
-                      cpf: '08990492815'
+                      cpf: '08349494905'
         '422':
           description: Unprocessable Content
           content:
@@ -387,7 +387,7 @@ paths:
     post:
       summary: Authenticate user and return token
       tags:
-      - Users
+      - Users - Login
       parameters: []
       responses:
         '200':
@@ -397,13 +397,13 @@ paths:
               examples:
                 example:
                   value:
-                    access_token: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjo2NTAsImV4cCI6MTc4NTg1NTAyMn0.LGVj7oVA5x-0pHRB0uOyXOrvC3r73qynw2UutwWflLg
-                    refresh_token: 27clEHnZQW6bY22WORt6HPHqcHq6SCbJCKRwlhyI91Y
+                    access_token: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxMTM0LCJleHAiOjE3ODU4NjU5OTd9.p6FiSJv2pxi7W0VfWi1kDzs7yWUwDCTQrfzir0FVBME
+                    refresh_token: HrUsb3e4qBfQZ1UfaveLOud_KxOcjBZ9m59fLYdtRsg
                     user:
-                      id: 650
-                      email: verna@howell-steuber.test
-                      name: Rod Legros JD
-                      cpf: '02240502304'
+                      id: 1134
+                      email: tuan_leuschke@olson.example
+                      name: Georgianna Zemlak
+                      cpf: '09117047013'
         '401':
           description: Unauthorized
           content:
@@ -434,7 +434,7 @@ paths:
     post:
       summary: Refresh access and refresh tokens
       tags:
-      - Users
+      - Users - Session
       parameters: []
       responses:
         '200':
@@ -444,8 +444,8 @@ paths:
               examples:
                 example:
                   value:
-                    access_token: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjo2NTIsImV4cCI6MTc4NTg1NTAyMn0.VweqUbsXguygxRFIxEEBbe6bR-FmsufTyopEeNsLEDs
-                    refresh_token: Sn5nUcwnkKJUfXENuGRLXQcl0tnOX7QCzzsX7PQtU8M
+                    access_token: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxMTM2LCJleHAiOjE3ODU4NjU5OTh9.15T9CNcrcLnN6VweVwe4Xuyt7SRm1txormhYBIG9lEg
+                    refresh_token: IbNZpZHbbKnpJpuJGsyDkwvVnri_D_PwAoQOQVKdIbs
         '401':
           description: Unauthorized
           content:
@@ -468,7 +468,7 @@ paths:
     delete:
       summary: Logout current user
       tags:
-      - Users
+      - Users - Session
       security:
       - BearerAuth: []
       parameters: []

@@ -4,7 +4,7 @@ RSpec.describe "Api::V1::Users::Registrations", type: :request do
   describe "Register" do
     path "/api/v1/register" do
       post "Create a new user account" do
-        tags "Users"
+        tags "Users - Register"
 
         consumes "application/json"
         produces "application/json"

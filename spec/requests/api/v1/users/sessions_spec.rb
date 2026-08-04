@@ -7,7 +7,7 @@ RSpec.describe "Api::V1::Users::Sessions", type: :request do
   describe "Login" do
     path "/api/v1/login" do
       post "Authenticate user and return token" do
-        tags "Users"
+        tags "Users - Login"
 
         consumes "application/json"
         produces "application/json"
@@ -60,7 +60,7 @@ RSpec.describe "Api::V1::Users::Sessions", type: :request do
   describe "Refresh" do
     path "/api/v1/refresh" do
       post "Refresh access and refresh tokens" do
-        tags "Users"
+        tags "Users - Session"
 
         consumes "application/json"
         produces "application/json"
@@ -101,7 +101,7 @@ RSpec.describe "Api::V1::Users::Sessions", type: :request do
   describe "Logout" do
     path "/api/v1/logout" do
       delete "Logout current user" do
-        tags "Users"
+        tags "Users - Session"
 
         consumes "application/json"
         security [ BearerAuth: [] ]

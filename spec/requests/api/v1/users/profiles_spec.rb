@@ -6,7 +6,7 @@ RSpec.describe "Api::V1::Users::Profiles", type: :request do
   describe "My profile information" do
     path "/api/v1/me" do
       get "Get my profile information" do
-        tags "Users"
+        tags "Users - Me"
 
         security [ BearerAuth: [] ]
 
@@ -42,7 +42,7 @@ RSpec.describe "Api::V1::Users::Profiles", type: :request do
   describe "Update my profile information" do
     path "/api/v1/me" do
       patch "Update my profile information" do
-        tags "Users"
+        tags "Users - Me"
 
         security [ BearerAuth: [] ]
 
@@ -108,7 +108,7 @@ RSpec.describe "Api::V1::Users::Profiles", type: :request do
   describe "Delete my account" do
     path "/api/v1/me" do
       delete "Delete my account" do
-        tags "Users"
+        tags "Users - Me"
 
         security [ BearerAuth: [] ]
 

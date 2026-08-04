@@ -23,19 +23,23 @@ RSpec.describe Merchant, type: :model do
       expect(merchant.errors[:document]).to include("has already been taken")
     end
 
-    it "requires a valid CPF or CNPJ document" do
-      merchant.document = "12345678901"
+    it "requires a valid CNPJ document" do
+      merchant.document = "12345678901234"
 
       expect(merchant).not_to be_valid
-      expect(merchant.errors[:document]).to include("is not a valid CPF or CNPJ")
+      expect(merchant.errors[:document]).to include("is not a valid CNPJ")
     end
 
-    it "normalizes document to digits only" do
+    it "accepts a formatted CNPJ" do
       merchant.document = "54.550.752/0001-55"
 
-      merchant.valid?
+      expect(merchant).to be_valid
+    end
+  end
 
-      expect(merchant.document).to eq("54550752000155")
+  describe "status" do
+    it "defaults to active" do
+      expect(build(:merchant).status).to eq("active")
     end
   end
 

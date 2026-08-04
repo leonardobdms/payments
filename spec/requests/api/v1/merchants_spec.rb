@@ -30,7 +30,7 @@ RSpec.describe "Api::V1::Merchants", type: :request do
 
         response "201", "Created" do
           let(:Authorization) { auth_headers(user)["Authorization"] }
-          let(:merchant_document) { user.cpf.gsub(/\D/, "") }
+          let(:merchant_document) { "54550752000155" }
           let(:body) do
             {
               merchant: {
@@ -57,7 +57,7 @@ RSpec.describe "Api::V1::Merchants", type: :request do
 
         response "401", "Unauthorized" do
           let(:Authorization) { "Bearer invalid.token" }
-          let(:body) { { merchant: { legal_name: "X", document: create(:user).cpf } } }
+          let(:body) { { merchant: { legal_name: "X", document: "11222333000181" } } }
 
           run_test! do |response|
             expect(response).to have_http_status(:unauthorized)
@@ -71,7 +71,7 @@ RSpec.describe "Api::V1::Merchants", type: :request do
             {
               merchant: {
                 legal_name: "Segunda Loja",
-                document: create(:user).cpf.gsub(/\D/, "")
+                document: "54550752000155"
               }
             }
           end
