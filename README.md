@@ -20,9 +20,9 @@ Right now the focus is on the **foundation** — registration, JWT authenticatio
 | Authentication | Login with short-lived JWT access tokens |
 | Session | Refresh tokens with rotation, SHA-256 digest storage, and revocation on logout |
 | Profile | Read, update, and delete your own account (`/me`) |
-| Merchants | Register merchant (1:1 with user), wallet account with BRL balances (`money-rails`) |
+| Merchants | Multiple merchants per user; each gets a BRL wallet (`money-rails`) |
 | Documentation | OpenAPI via [rswag](https://github.com/rswag/rswag) at `/api-docs` |
-| Quality | RSpec, RuboCop, Brakeman, Bundler Audit, and GitHub Actions CI |
+| Quality | RSpec, SimpleCov, RuboCop, Brakeman, Bundler Audit, and GitHub Actions CI |
 
 ### Current endpoints
 
@@ -34,9 +34,10 @@ DELETE /api/v1/logout     # revoke refresh token
 GET    /api/v1/me         # authenticated profile
 PATCH  /api/v1/me         # update profile
 DELETE /api/v1/me         # delete account
-GET    /api/v1/merchant   # merchant + wallet (auth)
-POST   /api/v1/merchant   # register merchant + wallet (auth)
-PATCH  /api/v1/merchant   # update merchant (auth)
+GET    /api/v1/merchants        # list my merchants (auth)
+POST   /api/v1/merchants       # register merchant + wallet (auth)
+GET    /api/v1/merchants/:id   # merchant + wallet (auth, own merchant only)
+PATCH  /api/v1/merchants/:id  # update merchant (auth)
 ```
 
 Interactive docs: `http://localhost:3000/api-docs` (with the API running).
@@ -47,7 +48,7 @@ Interactive docs: `http://localhost:3000/api-docs` (with the API running).
 - **PostgreSQL** 16
 - **JWT** (HS256) + **bcrypt**
 - **money-rails** (BRL balances in cents)
-- **RSpec** · FactoryBot · Faker
+- **RSpec** · SimpleCov · FactoryBot · Faker
 - **rswag** (OpenAPI 3)
 - **Docker** / Docker Compose
 - **GitHub Actions** (lint, security scan, tests)
@@ -60,7 +61,7 @@ Interactive docs: `http://localhost:3000/api-docs` (with the API running).
 - **Explicit logout** — revokes the refresh token tied to the authenticated user.
 - **Brazilian domain validations** — CPF and email via dedicated gems (`cpf_cnpj`, `validators`).
 - **`AuthToken` services** — token logic lives outside controllers and is easy to unit-test.
-- **Merchant + account** — one merchant per user; creating a merchant provisions a BRL wallet with zero balance.
+- **Merchant + account** — user may own many merchants; each create provisions a BRL wallet with zero balance.
 
 ## Getting started
 
@@ -123,11 +124,13 @@ This wraps `rswag:specs:swaggerize` with `RSWAG_DRY_RUN=0`, so the request specs
 ## Tests and quality
 
 ```bash
-bundle exec rspec          # test suite
+bundle exec rspec          # test suite (+ SimpleCov coverage report)
 bin/rubocop                # style
 bin/brakeman --no-pager    # static security analysis
 bin/bundler-audit          # known gem vulnerabilities
 ```
+
+After the suite finishes, open `coverage/index.html` for the HTML coverage report. The terminal also prints a line coverage summary.
 
 CI runs these checks on pull requests and pushes to `main`.
 
@@ -136,7 +139,7 @@ CI runs these checks on pull requests and pushes to `main`.
 ```
 app/
   controllers/api/v1/users/   # register, sessions, me
-  controllers/api/v1/merchants/ # merchant + wallet
+  controllers/api/v1/merchants_controller.rb  # merchant + wallet
   models/                     # User, RefreshToken, Merchant, Account
   services/auth_token/        # issue, decode, refresh, and revoke
 spec/
