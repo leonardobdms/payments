@@ -1,0 +1,206 @@
+// Payment Gateway — ER v1 (PostgreSQL)
+// Paste into https://dbdiagram.io to visualize.
+// Source of truth after implementation: Rails migrations + db/schema.rb
+
+Project gateway {
+  database_type: 'PostgreSQL'
+  Note: '''
+    Simplified Stripe-style PSP/wallet (study project).
+    Money via money-rails (*_cents bigint + currency). Append-only ledger.
+    Methods: pix + card (mock provider).
+  '''
+}
+
+// ---------------------------------------------------------------------------
+// Auth (already in the project)
+// ---------------------------------------------------------------------------
+
+Table users {
+  id bigint [pk, increment]
+  name varchar [not null]
+  email varchar [not null, unique]
+  cpf varchar [not null, unique]
+  password_digest varchar [not null]
+  created_at timestamp [not null]
+  updated_at timestamp [not null]
+
+  Note: 'Login account. Unique CPF/email.'
+}
+
+Table refresh_tokens {
+  id bigint [pk, increment]
+  user_id bigint [not null, ref: > users.id]
+  token_digest varchar [not null, unique]
+  expires_at timestamp [not null]
+  revoked_at timestamp
+  created_at timestamp [not null]
+  updated_at timestamp [not null]
+
+  Note: 'Refresh JWT stored as SHA-256 digest; rotated on refresh.'
+}
+
+// ---------------------------------------------------------------------------
+// Merchant + Account
+// ---------------------------------------------------------------------------
+
+Table merchants {
+  id bigint [pk, increment]
+  user_id bigint [not null, unique, ref: > users.id]
+  legal_name varchar [not null]
+  document varchar [not null, unique]
+  status varchar [not null, default: 'active', note: 'active | suspended | closed']
+  created_at timestamp [not null]
+  updated_at timestamp [not null]
+
+  Note: '1:1 with user in v1. document = receiver CNPJ/CPF.'
+}
+
+Table accounts {
+  id bigint [pk, increment]
+  merchant_id bigint [not null, unique, ref: > merchants.id]
+  currency varchar(3) [not null, default: 'BRL']
+  available_balance_cents bigint [not null, default: 0, note: 'Settled balance (materialized)']
+  pending_balance_cents bigint [not null, default: 0, note: 'Balance awaiting settlement']
+  created_at timestamp [not null]
+  updated_at timestamp [not null]
+
+  Note: 'One account per merchant. Balances via money-rails; must match ledger SUM.'
+}
+
+// ---------------------------------------------------------------------------
+// Charges + Refunds
+// ---------------------------------------------------------------------------
+
+Table charges {
+  id bigint [pk, increment]
+  merchant_id bigint [not null, ref: > merchants.id]
+  public_id varchar [not null, unique, note: 'Stable external id (e.g. ch_...)']
+  amount_cents bigint [not null, note: '> 0']
+  currency varchar(3) [not null, default: 'BRL']
+  status varchar [not null, default: 'pending', note: 'pending | processing | succeeded | failed | canceled']
+  payment_method varchar [not null, note: 'pix | card']
+  provider varchar [not null, default: 'mock']
+  provider_ref varchar [note: 'External provider id']
+  description varchar
+  customer_email varchar
+  customer_document varchar
+  metadata jsonb [not null, default: '{}']
+  succeeded_at timestamp
+  failed_at timestamp
+  canceled_at timestamp
+  created_at timestamp [not null]
+  updated_at timestamp [not null]
+
+  indexes {
+    (provider, provider_ref) [unique, name: 'index_charges_on_provider_and_provider_ref', note: 'unique when provider_ref IS NOT NULL']
+    (merchant_id, created_at) [name: 'index_charges_on_merchant_id_and_created_at']
+    status
+  }
+
+  Note: '''
+    Status machine:
+      pending → processing → succeeded | failed
+      pending → canceled
+      processing → canceled (if provider allows)
+    Do not delete charges; change status only.
+  '''
+}
+
+Table refunds {
+  id bigint [pk, increment]
+  charge_id bigint [not null, ref: > charges.id]
+  public_id varchar [not null, unique, note: 'e.g. re_...']
+  amount_cents bigint [not null, note: '> 0 and ≤ charge.amount_cents − succeeded refunds']
+  currency varchar(3) [not null, default: 'BRL']
+  status varchar [not null, default: 'pending', note: 'pending | processing | succeeded | failed | canceled']
+  reason varchar
+  provider_ref varchar
+  metadata jsonb [not null, default: '{}']
+  succeeded_at timestamp
+  created_at timestamp [not null]
+  updated_at timestamp [not null]
+
+  indexes {
+    (charge_id, created_at)
+    status
+  }
+
+  Note: 'Partial or full refund. Only against a succeeded charge.'
+}
+
+Table ledger_entries {
+  id bigint [pk, increment]
+  account_id bigint [not null, ref: > accounts.id]
+  charge_id bigint [ref: > charges.id]
+  refund_id bigint [ref: > refunds.id]
+  entry_type varchar [not null, note: 'charge_credit | charge_pending | charge_release | refund_debit | adjustment']
+  direction varchar [not null, note: 'credit | debit']
+  amount_cents bigint [not null, note: '> 0 (sign comes from direction)']
+  currency varchar(3) [not null, default: 'BRL']
+  balance_bucket varchar [not null, note: 'available | pending — which balance this entry affects']
+  description varchar
+  created_at timestamp [not null]
+
+  indexes {
+    (account_id, created_at)
+    charge_id
+    refund_id
+  }
+
+  Note: '''
+    APPEND-ONLY: no UPDATE of amount/direction; no DELETE.
+    updated_at intentionally omitted.
+    charge.succeeded → credit available (or pending → available).
+    refund.succeeded → debit available.
+  '''
+}
+
+// ---------------------------------------------------------------------------
+// Idempotency + Webhooks (outbox)
+// ---------------------------------------------------------------------------
+
+Table idempotency_keys {
+  id bigint [pk, increment]
+  user_id bigint [not null, ref: > users.id]
+  key varchar [not null]
+  request_path varchar [not null]
+  request_method varchar [not null, default: 'POST']
+  request_digest varchar [not null, note: 'body hash; conflict if key reused with a different body']
+  response_status int
+  response_body jsonb
+  locked_at timestamp
+  created_at timestamp [not null]
+  updated_at timestamp [not null]
+
+  indexes {
+    (user_id, key) [unique, name: 'index_idempotency_keys_on_user_id_and_key']
+  }
+
+  Note: '''
+    Idempotency-Key header on POST /charges and POST /refunds.
+    Replay returns the cached response_body/status.
+  '''
+}
+
+Table webhook_events {
+  id bigint [pk, increment]
+  charge_id bigint [ref: > charges.id]
+  refund_id bigint [ref: > refunds.id]
+  event_type varchar [not null, note: 'charge.succeeded | charge.failed | refund.succeeded | ...']
+  status varchar [not null, default: 'pending', note: 'pending | delivered | failed']
+  attempts int [not null, default: 0]
+  payload jsonb [not null]
+  last_error varchar
+  next_retry_at timestamp
+  delivered_at timestamp
+  created_at timestamp [not null]
+  updated_at timestamp [not null]
+
+  indexes {
+    (status, next_retry_at) [name: 'index_webhook_events_on_status_and_next_retry_at']
+    charge_id
+    refund_id
+  }
+
+  Note: 'Webhook outbox with retry. Worker delivers payload to merchant URL (later).'
+}
