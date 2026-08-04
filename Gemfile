@@ -82,3 +82,5 @@ gem "rswag-api", "~> 2.17"
 gem "rswag-ui", "~> 2.17"
 
 gem "money-rails", "~> 3.0"
+
+gem "alba"

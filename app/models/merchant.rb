@@ -13,15 +13,6 @@ class Merchant < ApplicationRecord
 
   after_create :create_default_account
 
-  def as_json(options = {})
-    super(
-      options.merge(
-        only: %w[id legal_name document status],
-        include: { account: { only: %w[currency available_balance_cents pending_balance_cents] } }
-      )
-    )
-  end
-
   private
 
   def create_default_account

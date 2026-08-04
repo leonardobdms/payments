@@ -1,12 +1,10 @@
-class Api::V1::Users::MeController < ApplicationController
-  before_action :authenticate_user!
-
+class Api::V1::Users::MeController < Api::V1::BaseController
   def show
-    render_user
+    render_serialized(current_user)
   end
 
   def update
-    return render_user if current_user.update(profile_params)
+    return render_serialized(current_user) if current_user.update(profile_params)
 
     render_unprocessable_content(current_user.errors)
   end
@@ -23,9 +21,5 @@ class Api::V1::Users::MeController < ApplicationController
     params.require(:user).permit(
       :email, :name, :cpf, :password, :password_confirmation
     )
-  end
-
-  def render_user
-    render json: current_user.as_json, status: :ok
   end
 end
