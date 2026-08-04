@@ -4,7 +4,7 @@ info:
   title: API V1
   version: v1
 paths:
-  "/api/v1/merchant":
+  "/api/v1/merchants":
     post:
       summary: Register merchant and wallet
       tags:
@@ -14,15 +14,15 @@ paths:
       parameters: []
       responses:
         '201':
-          description: Created
+          description: Created again with another document
           content:
             application/json:
               examples:
                 example:
                   value:
-                    id: 21
-                    legal_name: Loja Exemplo LTDA
-                    document: '01119623154'
+                    id: 155
+                    legal_name: Segunda Loja
+                    document: '02945835487'
                     status: active
                     account:
                       currency: BRL
@@ -36,14 +36,6 @@ paths:
                 example:
                   value:
                     error: Unauthorized
-        '409':
-          description: Conflict
-          content:
-            application/json:
-              examples:
-                example:
-                  value:
-                    error: Merchant already exists
         '422':
           description: Unprocessable Content
           content:
@@ -75,7 +67,7 @@ paths:
               required:
               - merchant
     get:
-      summary: Get my merchant and wallet
+      summary: List my merchants
       tags:
       - Merchants
       security:
@@ -88,9 +80,54 @@ paths:
               examples:
                 example:
                   value:
-                    id: 23
-                    legal_name: Brown and Sons
-                    document: '07852968597'
+                  - id: 156
+                    legal_name: Anderson, Batz and Lind
+                    document: '05670444248'
+                    status: active
+                    account:
+                      currency: BRL
+                      available_balance_cents: 0
+                      pending_balance_cents: 0
+                  - id: 157
+                    legal_name: Runolfsson Inc
+                    document: '03375483821'
+                    status: active
+                    account:
+                      currency: BRL
+                      available_balance_cents: 0
+                      pending_balance_cents: 0
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              examples:
+                example:
+                  value:
+                    error: Unauthorized
+  "/api/v1/merchants/{id}":
+    get:
+      summary: Get merchant and wallet
+      tags:
+      - Merchants
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              examples:
+                example:
+                  value:
+                    id: 158
+                    legal_name: Mraz-Daugherty
+                    document: '05886445870'
                     status: active
                     account:
                       currency: BRL
@@ -113,12 +150,17 @@ paths:
                   value:
                     error: Not Found
     patch:
-      summary: Update my merchant
+      summary: Update merchant
       tags:
       - Merchants
       security:
       - BearerAuth: []
-      parameters: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
       responses:
         '200':
           description: Success
@@ -127,9 +169,9 @@ paths:
               examples:
                 example:
                   value:
-                    id: 24
+                    id: 160
                     legal_name: Novo Nome
-                    document: '00924699140'
+                    document: '04427531288'
                     status: active
                     account:
                       currency: BRL
@@ -151,6 +193,16 @@ paths:
                 example:
                   value:
                     error: Not Found
+        '422':
+          description: Unprocessable Content
+          content:
+            application/json:
+              examples:
+                example:
+                  value:
+                    errors:
+                      legal_name:
+                      - can't be blank
       requestBody:
         content:
           application/json:
@@ -179,10 +231,10 @@ paths:
               examples:
                 example:
                   value:
-                    id: 278
-                    cpf: '05289757490'
-                    email: rickie@blick.test
-                    name: Elvie Bauch
+                    id: 644
+                    email: natasha.maggio@torp.test
+                    name: Williams Rippin
+                    cpf: '06947106281'
         '401':
           description: Unauthorized
           content:
@@ -206,10 +258,10 @@ paths:
               examples:
                 example:
                   value:
+                    id: 645
+                    email: kenna@shields.example
                     name: Novo Nome
-                    email: taylor_rolfson@oberbrunner.test
-                    cpf: '02797110269'
-                    id: 279
+                    cpf: '00999005480'
         '401':
           description: Unauthorized
           content:
@@ -285,13 +337,13 @@ paths:
               examples:
                 example:
                   value:
-                    token: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyODIsImV4cCI6MTc4NTg0NTE4MH0.iOEcJMXHJ0F8yAhMmuYgOIeqakNA8jg4w-MhuOTiwYU
-                    refresh_token: HlaY1co3EQDQyziBFSyODAiP4Mnbqa-1mDR12UqjWK8
+                    access_token: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjo2NDgsImV4cCI6MTc4NTg1NTAyMn0.cBQ3W-Np1wFtEVVIbyxF-y7_iH5jzwgJJjXWgNEc0VY
+                    refresh_token: mnT_7_neZ7Ut6yOLRlUefXZlrNbuuntaEUL-NCO3tDE
                     user:
-                      id: 282
-                      cpf: '07292821987'
-                      email: valentin@blanda.test
+                      id: 648
+                      email: april_jerde@wisozk.test
                       name: Novo Usuario
+                      cpf: '08990492815'
         '422':
           description: Unprocessable Content
           content:
@@ -345,13 +397,13 @@ paths:
               examples:
                 example:
                   value:
-                    token: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyODQsImV4cCI6MTc4NTg0NTE4MH0.xdK6NYZH62lOVqmiyOSgvN1M6uzCeNtpVm_4xBiSrvs
-                    refresh_token: VuNLNfBbOgGekG7zwXuqwdgooa3B2RgqCzGeJeuz4U0
+                    access_token: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjo2NTAsImV4cCI6MTc4NTg1NTAyMn0.LGVj7oVA5x-0pHRB0uOyXOrvC3r73qynw2UutwWflLg
+                    refresh_token: 27clEHnZQW6bY22WORt6HPHqcHq6SCbJCKRwlhyI91Y
                     user:
-                      id: 284
-                      cpf: '08458777550'
-                      email: arlen.waters@white.test
-                      name: Vanna Bradtke
+                      id: 650
+                      email: verna@howell-steuber.test
+                      name: Rod Legros JD
+                      cpf: '02240502304'
         '401':
           description: Unauthorized
           content:
@@ -392,8 +444,8 @@ paths:
               examples:
                 example:
                   value:
-                    token: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyODYsImV4cCI6MTc4NTg0NTE4MH0.cbMD6yGcKbIzncp8WeYnhCweKYaNx9Pv0dkhptmy77Q
-                    refresh_token: tcVa7h9pXhYwTYiMJLuxuThfJXK1S0ujZ5hAlpeW760
+                    access_token: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjo2NTIsImV4cCI6MTc4NTg1NTAyMn0.VweqUbsXguygxRFIxEEBbe6bR-FmsufTyopEeNsLEDs
+                    refresh_token: Sn5nUcwnkKJUfXENuGRLXQcl0tnOX7QCzzsX7PQtU8M
         '401':
           description: Unauthorized
           content:
