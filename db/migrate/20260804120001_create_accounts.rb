@@ -1,16 +1,5 @@
-class CreateMerchantsAndAccounts < ActiveRecord::Migration[8.1]
+class CreateAccounts < ActiveRecord::Migration[8.1]
   def change
-    create_table :merchants do |t|
-      t.references :user, null: false, foreign_key: true, index: { unique: true }
-      t.string :legal_name, null: false
-      t.string :document, null: false
-      t.string :status, null: false, default: "active"
-
-      t.timestamps
-    end
-
-    add_index :merchants, :document, unique: true
-
     create_table :accounts do |t|
       t.references :merchant, null: false, foreign_key: true, index: { unique: true }
       t.string :currency, null: false, default: "BRL"
