@@ -4,6 +4,166 @@ info:
   title: API V1
   version: v1
 paths:
+  "/api/v1/merchant":
+    post:
+      summary: Register merchant and wallet
+      tags:
+      - Merchants
+      security:
+      - BearerAuth: []
+      parameters: []
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              examples:
+                example:
+                  value:
+                    id: 21
+                    legal_name: Loja Exemplo LTDA
+                    document: '01119623154'
+                    status: active
+                    account:
+                      currency: BRL
+                      available_balance_cents: 0
+                      pending_balance_cents: 0
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              examples:
+                example:
+                  value:
+                    error: Unauthorized
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              examples:
+                example:
+                  value:
+                    error: Merchant already exists
+        '422':
+          description: Unprocessable Content
+          content:
+            application/json:
+              examples:
+                example:
+                  value:
+                    errors:
+                      legal_name:
+                      - can't be blank
+                      document:
+                      - can't be blank
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                merchant:
+                  type: object
+                  properties:
+                    legal_name:
+                      type: string
+                    document:
+                      type: string
+                  required:
+                  - legal_name
+                  - document
+              required:
+              - merchant
+    get:
+      summary: Get my merchant and wallet
+      tags:
+      - Merchants
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              examples:
+                example:
+                  value:
+                    id: 23
+                    legal_name: Brown and Sons
+                    document: '07852968597'
+                    status: active
+                    account:
+                      currency: BRL
+                      available_balance_cents: 1000
+                      pending_balance_cents: 500
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              examples:
+                example:
+                  value:
+                    error: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              examples:
+                example:
+                  value:
+                    error: Not Found
+    patch:
+      summary: Update my merchant
+      tags:
+      - Merchants
+      security:
+      - BearerAuth: []
+      parameters: []
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              examples:
+                example:
+                  value:
+                    id: 24
+                    legal_name: Novo Nome
+                    document: '00924699140'
+                    status: active
+                    account:
+                      currency: BRL
+                      available_balance_cents: 0
+                      pending_balance_cents: 0
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              examples:
+                example:
+                  value:
+                    error: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              examples:
+                example:
+                  value:
+                    error: Not Found
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                merchant:
+                  type: object
+                  properties:
+                    legal_name:
+                      type: string
+              required:
+              - merchant
   "/api/v1/me":
     get:
       summary: Get my profile information
@@ -19,10 +179,10 @@ paths:
               examples:
                 example:
                   value:
-                    id: 203
-                    cpf: '04215592259'
-                    email: oscar@bruen-kulas.test
-                    name: Janie Jakubowski
+                    id: 278
+                    cpf: '05289757490'
+                    email: rickie@blick.test
+                    name: Elvie Bauch
         '401':
           description: Unauthorized
           content:
@@ -47,9 +207,9 @@ paths:
                 example:
                   value:
                     name: Novo Nome
-                    email: roy_kunze@rosenbaum.example
-                    cpf: '07977492768'
-                    id: 204
+                    email: taylor_rolfson@oberbrunner.test
+                    cpf: '02797110269'
+                    id: 279
         '401':
           description: Unauthorized
           content:
@@ -125,12 +285,12 @@ paths:
               examples:
                 example:
                   value:
-                    token: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyMDcsImV4cCI6MTc4NTcyODE3NH0.39Xo4kbNGnUKEpUWFwryN09GR1Ys4RMByxxvAp5yAgM
-                    refresh_token: TU_F7FRBFWhtazlAGEW5VRhslGI8Qa6qhEPmRhFDBoM
+                    token: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyODIsImV4cCI6MTc4NTg0NTE4MH0.iOEcJMXHJ0F8yAhMmuYgOIeqakNA8jg4w-MhuOTiwYU
+                    refresh_token: HlaY1co3EQDQyziBFSyODAiP4Mnbqa-1mDR12UqjWK8
                     user:
-                      id: 207
-                      cpf: '07465317614'
-                      email: felton_hahn@kuhlman.example
+                      id: 282
+                      cpf: '07292821987'
+                      email: valentin@blanda.test
                       name: Novo Usuario
         '422':
           description: Unprocessable Content
@@ -185,13 +345,13 @@ paths:
               examples:
                 example:
                   value:
-                    token: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyMDksImV4cCI6MTc4NTcyODE3NH0.GLwnHcqF9IEDHBap67w4FS4AJZN1mmG69yM0FnOrBxY
-                    refresh_token: XeX7YFgN3R0s3qH874Vw6jm3TG1202DiYjJ6teVhVN8
+                    token: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyODQsImV4cCI6MTc4NTg0NTE4MH0.xdK6NYZH62lOVqmiyOSgvN1M6uzCeNtpVm_4xBiSrvs
+                    refresh_token: VuNLNfBbOgGekG7zwXuqwdgooa3B2RgqCzGeJeuz4U0
                     user:
-                      id: 209
-                      cpf: '07880297030'
-                      email: kaila@sipes.example
-                      name: Rev. Eusebia Pfeffer
+                      id: 284
+                      cpf: '08458777550'
+                      email: arlen.waters@white.test
+                      name: Vanna Bradtke
         '401':
           description: Unauthorized
           content:
@@ -232,8 +392,8 @@ paths:
               examples:
                 example:
                   value:
-                    token: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyMTEsImV4cCI6MTc4NTcyODE3NH0.el-d18qkvBlnj6mvkyxJFaHylo-_WAMpElnw820tdb8
-                    refresh_token: fLecevVUyG_QgPo_zfoLbt0FzVZ5X6WSO2APPgEq53c
+                    token: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyODYsImV4cCI6MTc4NTg0NTE4MH0.cbMD6yGcKbIzncp8WeYnhCweKYaNx9Pv0dkhptmy77Q
+                    refresh_token: tcVa7h9pXhYwTYiMJLuxuThfJXK1S0ujZ5hAlpeW760
         '401':
           description: Unauthorized
           content:

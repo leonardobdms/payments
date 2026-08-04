@@ -20,6 +20,7 @@ Right now the focus is on the **foundation** — registration, JWT authenticatio
 | Authentication | Login with short-lived JWT access tokens |
 | Session | Refresh tokens with rotation, SHA-256 digest storage, and revocation on logout |
 | Profile | Read, update, and delete your own account (`/me`) |
+| Merchants | Register merchant (1:1 with user), wallet account with BRL balances (`money-rails`) |
 | Documentation | OpenAPI via [rswag](https://github.com/rswag/rswag) at `/api-docs` |
 | Quality | RSpec, RuboCop, Brakeman, Bundler Audit, and GitHub Actions CI |
 
@@ -33,6 +34,9 @@ DELETE /api/v1/logout     # revoke refresh token
 GET    /api/v1/me         # authenticated profile
 PATCH  /api/v1/me         # update profile
 DELETE /api/v1/me         # delete account
+GET    /api/v1/merchant   # merchant + wallet (auth)
+POST   /api/v1/merchant   # register merchant + wallet (auth)
+PATCH  /api/v1/merchant   # update merchant (auth)
 ```
 
 Interactive docs: `http://localhost:3000/api-docs` (with the API running).
@@ -42,6 +46,7 @@ Interactive docs: `http://localhost:3000/api-docs` (with the API running).
 - **Ruby** 4.0.4 · **Rails** 8.1 (API-only)
 - **PostgreSQL** 16
 - **JWT** (HS256) + **bcrypt**
+- **money-rails** (BRL balances in cents)
 - **RSpec** · FactoryBot · Faker
 - **rswag** (OpenAPI 3)
 - **Docker** / Docker Compose
@@ -55,6 +60,7 @@ Interactive docs: `http://localhost:3000/api-docs` (with the API running).
 - **Explicit logout** — revokes the refresh token tied to the authenticated user.
 - **Brazilian domain validations** — CPF and email via dedicated gems (`cpf_cnpj`, `validators`).
 - **`AuthToken` services** — token logic lives outside controllers and is easy to unit-test.
+- **Merchant + account** — one merchant per user; creating a merchant provisions a BRL wallet with zero balance.
 
 ## Getting started
 
@@ -130,7 +136,8 @@ CI runs these checks on pull requests and pushes to `main`.
 ```
 app/
   controllers/api/v1/users/   # register, sessions, me
-  models/                     # User, RefreshToken
+  controllers/api/v1/merchants/ # merchant + wallet
+  models/                     # User, RefreshToken, Merchant, Account
   services/auth_token/        # issue, decode, refresh, and revoke
 spec/
   models/ requests/ services/ # auth foundation coverage
@@ -143,11 +150,10 @@ db/
 
 Planned next steps for the gateway:
 
-1. Accounts / wallets and balance
-2. Charges and payment status
-3. Webhooks and idempotency
-4. External payment provider integration (or mock)
-5. Auditing and rate limiting
+1. Charges and payment status (merchant wallet done)
+2. Webhooks and idempotency
+3. External payment provider integration (or mock)
+4. Auditing and rate limiting
 
 ## License
 
