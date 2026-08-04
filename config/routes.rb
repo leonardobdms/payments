@@ -17,6 +17,8 @@ Rails.application.routes.draw do
 
         resource :me, only: %i[show update destroy], controller: "me"
       end
+
+      resource :merchant, only: %i[show create update], controller: "merchants/merchant"
     end
   end
 end
