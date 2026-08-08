@@ -7,7 +7,7 @@ RSpec.describe "Api::V1::Users::Sessions", type: :request do
   describe "Login" do
     path "/api/v1/login" do
       post "Authenticate user and return token" do
-        tags "Users"
+        tags "Users - Login"
 
         consumes "application/json"
         produces "application/json"
@@ -18,8 +18,8 @@ RSpec.describe "Api::V1::Users::Sessions", type: :request do
             user: {
               type: :object,
               properties: {
-                email: { type: :string },
-                password: { type: :string }
+                email: { type: :string, format: :email },
+                password: { type: :string, format: :password, minLength: 8 }
               },
               required: %w[email password]
             }
@@ -32,7 +32,7 @@ RSpec.describe "Api::V1::Users::Sessions", type: :request do
 
           run_test! do |response|
             expect(response).to have_http_status(:ok)
-            expect(response.parsed_body).to include("token", "refresh_token", "user")
+            expect(response.parsed_body).to include("access_token", "refresh_token", "user")
             expect(response.parsed_body["user"]).to include(
               "id" => user.id,
               "email" => user.email,
@@ -40,7 +40,7 @@ RSpec.describe "Api::V1::Users::Sessions", type: :request do
               "cpf" => user.cpf
             )
             expect(response.parsed_body["user"].keys).not_to include("password_digest")
-            expect(AuthToken::Token.decode(response.parsed_body["token"])[:user_id]).to eq(user.id)
+            expect(AuthToken::Token.decode(response.parsed_body["access_token"])[:user_id]).to eq(user.id)
             expect(user.refresh_tokens.count).to eq(1)
           end
         end
@@ -60,7 +60,7 @@ RSpec.describe "Api::V1::Users::Sessions", type: :request do
   describe "Refresh" do
     path "/api/v1/refresh" do
       post "Refresh access and refresh tokens" do
-        tags "Users"
+        tags "Users - Session"
 
         consumes "application/json"
         produces "application/json"
@@ -79,9 +79,9 @@ RSpec.describe "Api::V1::Users::Sessions", type: :request do
 
           run_test! do |response|
             expect(response).to have_http_status(:ok)
-            expect(response.parsed_body).to include("token", "refresh_token")
+            expect(response.parsed_body).to include("access_token", "refresh_token")
             expect(response.parsed_body["refresh_token"]).not_to eq(tokens[:refresh_token])
-            expect(AuthToken::Token.decode(response.parsed_body["token"])[:user_id]).to eq(user.id)
+            expect(AuthToken::Token.decode(response.parsed_body["access_token"])[:user_id]).to eq(user.id)
             expect(AuthToken::Refresh.new(token: tokens[:refresh_token]).refresh!).to be_nil
           end
         end
@@ -101,7 +101,7 @@ RSpec.describe "Api::V1::Users::Sessions", type: :request do
   describe "Logout" do
     path "/api/v1/logout" do
       delete "Logout current user" do
-        tags "Users"
+        tags "Users - Session"
 
         consumes "application/json"
         security [ BearerAuth: [] ]

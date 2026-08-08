@@ -13,6 +13,21 @@
 # it.
 #
 # See https://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
+
+require "simplecov"
+SimpleCov.start "rails" do
+  skip "/spec/"
+  skip "/config/"
+  skip "/vendor/"
+  skip "/db/"
+  skip "/app/jobs/"
+  skip "/app/mailers/"
+
+  group "Controllers", "app/controllers"
+  group "Models", "app/models"
+  group "Services", "app/services"
+end
+
 RSpec.configure do |config|
   # rspec-expectations config goes here. You can use an alternate
   # assertion/expectation library such as wrong or the stdlib/minitest

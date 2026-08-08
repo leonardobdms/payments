@@ -4,11 +4,74 @@ info:
   title: API V1
   version: v1
 paths:
-  "/api/v1/me":
-    get:
-      summary: Get my profile information
+  "/api/v1/merchants":
+    post:
+      summary: Register merchant and wallet
       tags:
-      - Users
+      - Merchants
+      security:
+      - BearerAuth: []
+      parameters: []
+      responses:
+        '201':
+          description: Created again with another document
+          content:
+            application/json:
+              examples:
+                example:
+                  value:
+                    id: 3
+                    legal_name: Segunda Loja
+                    document: '54550752000155'
+                    status: active
+                    account:
+                      currency: BRL
+                      available_balance_cents: 0
+                      pending_balance_cents: 0
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              examples:
+                example:
+                  value:
+                    error: Unauthorized
+        '422':
+          description: Unprocessable Content
+          content:
+            application/json:
+              examples:
+                example:
+                  value:
+                    errors:
+                      legal_name:
+                      - can't be blank
+                      document:
+                      - is not a valid CNPJ
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                merchant:
+                  type: object
+                  properties:
+                    legal_name:
+                      type: string
+                    document:
+                      type: string
+                      pattern: "^\\d{14}$"
+                      description: CNPJ (14 digits)
+                  required:
+                  - legal_name
+                  - document
+              required:
+              - merchant
+    get:
+      summary: List my merchants
+      tags:
+      - Merchants
       security:
       - BearerAuth: []
       responses:
@@ -19,10 +82,161 @@ paths:
               examples:
                 example:
                   value:
-                    id: 203
-                    cpf: '04215592259'
-                    email: oscar@bruen-kulas.test
-                    name: Janie Jakubowski
+                  - id: 4
+                    legal_name: Gislason-Keeling
+                    document: TYJME4IKAW8736
+                    status: active
+                    account:
+                      currency: BRL
+                      available_balance_cents: 0
+                      pending_balance_cents: 0
+                  - id: 5
+                    legal_name: Kassulke, Marks and Kreiger
+                    document: 6BOKPYSC4NP545
+                    status: active
+                    account:
+                      currency: BRL
+                      available_balance_cents: 0
+                      pending_balance_cents: 0
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              examples:
+                example:
+                  value:
+                    error: Unauthorized
+  "/api/v1/merchants/{id}":
+    get:
+      summary: Get merchant and wallet
+      tags:
+      - Merchants
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              examples:
+                example:
+                  value:
+                    id: 6
+                    legal_name: Ritchie LLC
+                    document: EVSMIB0EDYZ479
+                    status: active
+                    account:
+                      currency: BRL
+                      available_balance_cents: 1000
+                      pending_balance_cents: 500
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              examples:
+                example:
+                  value:
+                    error: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              examples:
+                example:
+                  value:
+                    error: Not Found
+    patch:
+      summary: Update merchant
+      tags:
+      - Merchants
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              examples:
+                example:
+                  value:
+                    id: 8
+                    legal_name: Novo Nome
+                    document: VZOFATBORH7S19
+                    status: active
+                    account:
+                      currency: BRL
+                      available_balance_cents: 0
+                      pending_balance_cents: 0
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              examples:
+                example:
+                  value:
+                    error: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              examples:
+                example:
+                  value:
+                    error: Not Found
+        '422':
+          description: Unprocessable Content
+          content:
+            application/json:
+              examples:
+                example:
+                  value:
+                    errors:
+                      legal_name:
+                      - can't be blank
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                merchant:
+                  type: object
+                  properties:
+                    legal_name:
+                      type: string
+              required:
+              - merchant
+  "/api/v1/me":
+    get:
+      summary: Get my profile information
+      tags:
+      - Users - Me
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              examples:
+                example:
+                  value:
+                    id: 12
+                    email: judie@walter.example
+                    name: Fermin Beatty
+                    cpf: '01920803343'
         '401':
           description: Unauthorized
           content:
@@ -34,7 +248,7 @@ paths:
     patch:
       summary: Update my profile information
       tags:
-      - Users
+      - Users - Me
       security:
       - BearerAuth: []
       parameters: []
@@ -46,10 +260,10 @@ paths:
               examples:
                 example:
                   value:
+                    id: 13
+                    email: michal.aufderhar@hodkiewicz-hermann.example
                     name: Novo Nome
-                    email: roy_kunze@rosenbaum.example
-                    cpf: '07977492768'
-                    id: 204
+                    cpf: '00214088154'
         '401':
           description: Unauthorized
           content:
@@ -79,20 +293,26 @@ paths:
                   properties:
                     email:
                       type: string
+                      format: email
                     name:
                       type: string
                     cpf:
                       type: string
+                      pattern: "^\\d{11}$"
                     password:
                       type: string
+                      format: password
+                      minLength: 8
                     password_confirmation:
                       type: string
+                      format: password
+                      minLength: 8
               required:
               - user
     delete:
       summary: Delete my account
       tags:
-      - Users
+      - Users - Me
       security:
       - BearerAuth: []
       responses:
@@ -115,7 +335,7 @@ paths:
     post:
       summary: Create a new user account
       tags:
-      - Users
+      - Users - Register
       parameters: []
       responses:
         '201':
@@ -125,13 +345,13 @@ paths:
               examples:
                 example:
                   value:
-                    token: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyMDcsImV4cCI6MTc4NTcyODE3NH0.39Xo4kbNGnUKEpUWFwryN09GR1Ys4RMByxxvAp5yAgM
-                    refresh_token: TU_F7FRBFWhtazlAGEW5VRhslGI8Qa6qhEPmRhFDBoM
+                    access_token: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxNiwiZXhwIjoxNzg2MjAyMzUwfQ.qnrxX3giAg3cOTuJoQFDytoKSLveHYDF3bJROZIYLLs
+                    refresh_token: j3YZwSwvnWGGlvalmgxbsifuROsl5c8Nzg3CDxVvljI
                     user:
-                      id: 207
-                      cpf: '07465317614'
-                      email: felton_hahn@kuhlman.example
+                      id: 16
+                      email: lorriane_ryan@wisozk.test
                       name: Novo Usuario
+                      cpf: '09656364376'
         '422':
           description: Unprocessable Content
           content:
@@ -155,14 +375,20 @@ paths:
                   properties:
                     email:
                       type: string
+                      format: email
                     name:
                       type: string
                     cpf:
                       type: string
+                      pattern: "^\\d{11}$"
                     password:
                       type: string
+                      format: password
+                      minLength: 8
                     password_confirmation:
                       type: string
+                      format: password
+                      minLength: 8
                   required:
                   - email
                   - name
@@ -175,7 +401,7 @@ paths:
     post:
       summary: Authenticate user and return token
       tags:
-      - Users
+      - Users - Login
       parameters: []
       responses:
         '200':
@@ -185,13 +411,13 @@ paths:
               examples:
                 example:
                   value:
-                    token: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyMDksImV4cCI6MTc4NTcyODE3NH0.GLwnHcqF9IEDHBap67w4FS4AJZN1mmG69yM0FnOrBxY
-                    refresh_token: XeX7YFgN3R0s3qH874Vw6jm3TG1202DiYjJ6teVhVN8
+                    access_token: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxOCwiZXhwIjoxNzg2MjAyMzUwfQ.GsOv93klcMiZ5dMLaHgfyslF18gdlP5O8v8pQGnULro
+                    refresh_token: O9sKVxLKai0XdLQXNIKYZhjd75jfhdBrHhwIx4VrTWI
                     user:
-                      id: 209
-                      cpf: '07880297030'
-                      email: kaila@sipes.example
-                      name: Rev. Eusebia Pfeffer
+                      id: 18
+                      email: elva_koss@mertz.test
+                      name: Rep. Errol Huels
+                      cpf: '03904395416'
         '401':
           description: Unauthorized
           content:
@@ -211,8 +437,11 @@ paths:
                   properties:
                     email:
                       type: string
+                      format: email
                     password:
                       type: string
+                      format: password
+                      minLength: 8
                   required:
                   - email
                   - password
@@ -222,7 +451,7 @@ paths:
     post:
       summary: Refresh access and refresh tokens
       tags:
-      - Users
+      - Users - Session
       parameters: []
       responses:
         '200':
@@ -232,8 +461,8 @@ paths:
               examples:
                 example:
                   value:
-                    token: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyMTEsImV4cCI6MTc4NTcyODE3NH0.el-d18qkvBlnj6mvkyxJFaHylo-_WAMpElnw820tdb8
-                    refresh_token: fLecevVUyG_QgPo_zfoLbt0FzVZ5X6WSO2APPgEq53c
+                    access_token: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyMCwiZXhwIjoxNzg2MjAyMzUwfQ.81VZN9RONs82fXBokKJSoKTQmCepR-3wCE8G1rBmCnk
+                    refresh_token: F1aq8ztoK54T46eauY4fc9pWILurTF0-LlN5vOOrBME
         '401':
           description: Unauthorized
           content:
@@ -256,7 +485,7 @@ paths:
     delete:
       summary: Logout current user
       tags:
-      - Users
+      - Users - Session
       security:
       - BearerAuth: []
       parameters: []

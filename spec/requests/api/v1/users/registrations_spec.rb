@@ -4,7 +4,7 @@ RSpec.describe "Api::V1::Users::Registrations", type: :request do
   describe "Register" do
     path "/api/v1/register" do
       post "Create a new user account" do
-        tags "Users"
+        tags "Users - Register"
 
         consumes "application/json"
         produces "application/json"
@@ -15,11 +15,11 @@ RSpec.describe "Api::V1::Users::Registrations", type: :request do
             user: {
               type: :object,
               properties: {
-                email: { type: :string },
+                email: { type: :string, format: :email },
                 name: { type: :string },
-                cpf: { type: :string },
-                password: { type: :string },
-                password_confirmation: { type: :string }
+                cpf: { type: :string, pattern: '^\d{11}$' },
+                password: { type: :string, format: :password, minLength: 8 },
+                password_confirmation: { type: :string, format: :password, minLength: 8 }
               },
               required: %w[email name cpf password password_confirmation]
             }
@@ -45,14 +45,14 @@ RSpec.describe "Api::V1::Users::Registrations", type: :request do
 
           run_test! do |response|
             expect(response).to have_http_status(:created)
-            expect(response.parsed_body).to include("token", "refresh_token", "user")
+            expect(response.parsed_body).to include("access_token", "refresh_token", "user")
             expect(response.parsed_body["user"]).to include(
               "email" => email,
               "name" => "Novo Usuario",
               "cpf" => cpf
             )
             expect(response.parsed_body["user"].keys).not_to include("password_digest")
-            expect(AuthToken::Token.decode(response.parsed_body["token"])[:user_id]).to eq(
+            expect(AuthToken::Token.decode(response.parsed_body["access_token"])[:user_id]).to eq(
               response.parsed_body["user"]["id"]
             )
             expect(User.find(response.parsed_body["user"]["id"]).refresh_tokens.count).to eq(1)

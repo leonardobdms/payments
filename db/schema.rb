@@ -10,9 +10,32 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_03_010000) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_04_120001) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+
+  create_table "accounts", force: :cascade do |t|
+    t.bigint "available_balance_cents", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.string "currency", default: "BRL", null: false
+    t.bigint "merchant_id", null: false
+    t.bigint "pending_balance_cents", default: 0, null: false
+    t.datetime "updated_at", null: false
+    t.index ["merchant_id"], name: "index_accounts_on_merchant_id", unique: true
+    t.check_constraint "available_balance_cents >= 0", name: "accounts_available_balance_cents_non_negative"
+    t.check_constraint "pending_balance_cents >= 0", name: "accounts_pending_balance_cents_non_negative"
+  end
+
+  create_table "merchants", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "document", null: false
+    t.string "legal_name", null: false
+    t.string "status", default: "active", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["document"], name: "index_merchants_on_document", unique: true
+    t.index ["user_id"], name: "index_merchants_on_user_id"
+  end
 
   create_table "refresh_tokens", force: :cascade do |t|
     t.datetime "created_at", null: false
@@ -36,5 +59,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_03_010000) do
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 
+  add_foreign_key "accounts", "merchants"
+  add_foreign_key "merchants", "users"
   add_foreign_key "refresh_tokens", "users"
 end
