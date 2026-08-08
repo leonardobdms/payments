@@ -2,7 +2,7 @@
 
 A payment gateway API built with Ruby on Rails.
 
-> **Status:** work in progress. Authentication and user management are in place; the payments domain comes next.
+> **Status:** work in progress. Authentication, user profile, merchants, and BRL wallets are implemented; charges and payment flows come next.
 
 ---
 
@@ -10,34 +10,38 @@ A payment gateway API built with Ruby on Rails.
 
 A payment gateway focused on real-world flows, security, and an API design that is easy to evolve.
 
-Right now the focus is on the **foundation** — registration, JWT authentication with refresh tokens, and user profile — because any financial operation depends on getting this right first.
+The current milestone covers **identity and merchant onboarding**: users register with validated CPF/email, authenticate with JWT + refresh tokens, manage their profile, and register one or more merchants—each with a dedicated BRL wallet account ready for future ledger operations.
 
 ## What's implemented
 
 | Area | Details |
 |------|---------|
-| Registration | Sign-up with email and CPF validation |
-| Authentication | Login with short-lived JWT access tokens |
+| Registration | Sign-up with email and CPF validation; returns `access_token`, `refresh_token`, and serialized user |
+| Authentication | Login with short-lived JWT access tokens (`access_token` in JSON) |
 | Session | Refresh tokens with rotation, SHA-256 digest storage, and revocation on logout |
 | Profile | Read, update, and delete your own account (`/me`) |
-| Merchants | Multiple merchants per user; each gets a BRL wallet (`money-rails`) |
-| Documentation | OpenAPI via [rswag](https://github.com/rswag/rswag) at `/api-docs` |
+| Merchants | CRUD for the authenticated user's merchants; CNPJ validation; `legal_name` and `document` on create; `legal_name` on update |
+| Wallets | Each merchant gets an `Account` on create (`money-rails`): `available_balance_cents` and `pending_balance_cents` in BRL, starting at zero |
+| API layer | `Api::V1::BaseController` with shared auth; concerns for authentication, errors, and serialization; Alba serializers for JSON |
+| Documentation | OpenAPI via [rswag](https://github.com/rswag/rswag) at `/api-docs` (request schemas with email, password, CPF, and CNPJ hints) |
 | Quality | RSpec, SimpleCov, RuboCop, Brakeman, Bundler Audit, and GitHub Actions CI |
 
 ### Current endpoints
 
+Protected routes expect `Authorization: Bearer <access_token>`.
+
 ```
-POST   /api/v1/register   # create account
-POST   /api/v1/login      # authenticate
-POST   /api/v1/refresh    # renew tokens
-DELETE /api/v1/logout     # revoke refresh token
-GET    /api/v1/me         # authenticated profile
-PATCH  /api/v1/me         # update profile
-DELETE /api/v1/me         # delete account
-GET    /api/v1/merchants        # list my merchants (auth)
-POST   /api/v1/merchants       # register merchant + wallet (auth)
-GET    /api/v1/merchants/:id   # merchant + wallet (auth, own merchant only)
-PATCH  /api/v1/merchants/:id  # update merchant (auth)
+POST   /api/v1/register          # create account
+POST   /api/v1/login             # authenticate
+POST   /api/v1/refresh           # renew tokens (body: refresh_token)
+DELETE /api/v1/logout            # revoke refresh token (auth + refresh_token in body)
+GET    /api/v1/me                # profile
+PATCH  /api/v1/me                # update profile
+DELETE /api/v1/me                # delete account
+GET    /api/v1/merchants         # list my merchants
+POST   /api/v1/merchants         # register merchant + wallet
+GET    /api/v1/merchants/:id     # merchant + nested account
+PATCH  /api/v1/merchants/:id     # update merchant (legal_name)
 ```
 
 Interactive docs: `http://localhost:3000/api-docs` (with the API running).
@@ -47,7 +51,9 @@ Interactive docs: `http://localhost:3000/api-docs` (with the API running).
 - **Ruby** 4.0.4 · **Rails** 8.1 (API-only)
 - **PostgreSQL** 16
 - **JWT** (HS256) + **bcrypt**
+- **Alba** (JSON serializers)
 - **money-rails** (BRL balances in cents)
+- **cpf_cnpj** · **validators** (CPF, CNPJ, email)
 - **RSpec** · SimpleCov · FactoryBot · Faker
 - **rswag** (OpenAPI 3)
 - **Docker** / Docker Compose
@@ -59,9 +65,11 @@ Interactive docs: `http://localhost:3000/api-docs` (with the API running).
 - **Refresh token stored as a digest** — the plain value is returned once; only the hash is persisted.
 - **Rotation on refresh** — the previous token is revoked when a new pair is issued.
 - **Explicit logout** — revokes the refresh token tied to the authenticated user.
-- **Brazilian domain validations** — CPF and email via dedicated gems (`cpf_cnpj`, `validators`).
-- **`AuthToken` services** — token logic lives outside controllers and is easy to unit-test.
-- **Merchant + account** — user may own many merchants; each create provisions a BRL wallet with zero balance.
+- **Brazilian domain validations** — CPF and email on users; CNPJ on merchants (`cpf_cnpj`, `validators`).
+- **`AuthToken` services** — `issue_for`, `rotate`, and `revoke` keep token logic out of controllers and easy to unit-test.
+- **Merchant + account** — user may own many merchants; each create provisions a BRL wallet with zero balance and non-negative balance constraints at the DB level.
+- **Alba serializers** — consistent JSON shape; no `password_digest` or timestamps on public user payloads.
+- **Controller concerns** — `Authenticatable`, `ErrorRenderable` (including `RecordNotFound` → 404), and `Serializable` for DRY API responses.
 
 ## Getting started
 
@@ -132,28 +140,32 @@ bin/bundler-audit          # known gem vulnerabilities
 
 After the suite finishes, open `coverage/index.html` for the HTML coverage report. The terminal also prints a line coverage summary.
 
-CI runs these checks on pull requests and pushes to `main`.
+CI runs these checks on pull requests and pushes to the default branch.
 
 ## Relevant structure
 
 ```
 app/
-  controllers/api/v1/users/   # register, sessions, me
-  controllers/api/v1/merchants_controller.rb  # merchant + wallet
-  models/                     # User, RefreshToken, Merchant, Account
-  services/auth_token/        # issue, decode, refresh, and revoke
+  controllers/api/v1/
+    base_controller.rb          # authenticate_user! for protected routes
+    merchants_controller.rb
+    users/                      # registrations, sessions, me
+  controllers/concerns/         # Authenticatable, ErrorRenderable, Serializable
+  models/                       # User, RefreshToken, Merchant, Account
+  serializers/                  # Alba (User, Merchant, Account)
+  services/auth_token/          # Token encode/decode, Refresh issue/rotate/revoke
 spec/
-  models/ requests/ services/ # auth foundation coverage
-swagger/v1/                   # OpenAPI generated by rswag
+  models/ requests/ services/
+swagger/v1/                     # OpenAPI generated by rswag
 db/
-  diagram/gateway.dbml        # ER diagram (paste into dbdiagram.io); migrations are source of truth
+  diagram/gateway.dbml          # ER diagram (paste into dbdiagram.io); migrations are source of truth
 ```
 
 ## Roadmap
 
 Planned next steps for the gateway:
 
-1. Charges and payment status (merchant wallet done)
+1. Charges and payment status
 2. Webhooks and idempotency
 3. External payment provider integration (or mock)
 4. Auditing and rate limiting
