@@ -20,7 +20,7 @@ paths:
               examples:
                 example:
                   value:
-                    id: 43
+                    id: 3
                     legal_name: Segunda Loja
                     document: '54550752000155'
                     status: active
@@ -82,17 +82,17 @@ paths:
               examples:
                 example:
                   value:
-                  - id: 44
-                    legal_name: Kozey-McCullough
-                    document: TIDDVLLWBZ9E20
+                  - id: 4
+                    legal_name: Gislason-Keeling
+                    document: TYJME4IKAW8736
                     status: active
                     account:
                       currency: BRL
                       available_balance_cents: 0
                       pending_balance_cents: 0
-                  - id: 45
-                    legal_name: Simonis-Murray
-                    document: CKHRSCANE2JJ10
+                  - id: 5
+                    legal_name: Kassulke, Marks and Kreiger
+                    document: 6BOKPYSC4NP545
                     status: active
                     account:
                       currency: BRL
@@ -127,9 +127,9 @@ paths:
               examples:
                 example:
                   value:
-                    id: 46
-                    legal_name: Kihn-Johnston
-                    document: XIV3GW4ASJPF84
+                    id: 6
+                    legal_name: Ritchie LLC
+                    document: EVSMIB0EDYZ479
                     status: active
                     account:
                       currency: BRL
@@ -171,9 +171,9 @@ paths:
               examples:
                 example:
                   value:
-                    id: 48
+                    id: 8
                     legal_name: Novo Nome
-                    document: B5XAYCFIHBQR46
+                    document: VZOFATBORH7S19
                     status: active
                     account:
                       currency: BRL
@@ -233,10 +233,10 @@ paths:
               examples:
                 example:
                   value:
-                    id: 102
-                    email: shaun.glover@hudson.example
-                    name: Debra Runolfsson
-                    cpf: '03219889573'
+                    id: 12
+                    email: judie@walter.example
+                    name: Fermin Beatty
+                    cpf: '01920803343'
         '401':
           description: Unauthorized
           content:
@@ -260,10 +260,10 @@ paths:
               examples:
                 example:
                   value:
-                    id: 103
-                    email: ellis@marvin-will.test
+                    id: 13
+                    email: michal.aufderhar@hodkiewicz-hermann.example
                     name: Novo Nome
-                    cpf: '07495869585'
+                    cpf: '00214088154'
         '401':
           description: Unauthorized
           content:
@@ -345,13 +345,13 @@ paths:
               examples:
                 example:
                   value:
-                    access_token: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxMDYsImV4cCI6MTc4NjE5OTUxOH0.BeF0ninblqy0jNoqM7OpjtpJAGBD3Qonit_Eim21gzc
-                    refresh_token: 3m8LHj5Qa-WuQj6r1h5BoBren1y71MoyLoySvncDAJg
+                    access_token: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxNiwiZXhwIjoxNzg2MjAyMzUwfQ.qnrxX3giAg3cOTuJoQFDytoKSLveHYDF3bJROZIYLLs
+                    refresh_token: j3YZwSwvnWGGlvalmgxbsifuROsl5c8Nzg3CDxVvljI
                     user:
-                      id: 106
-                      email: judith@labadie.example
+                      id: 16
+                      email: lorriane_ryan@wisozk.test
                       name: Novo Usuario
-                      cpf: '03419603576'
+                      cpf: '09656364376'
         '422':
           description: Unprocessable Content
           content:
@@ -411,13 +411,13 @@ paths:
               examples:
                 example:
                   value:
-                    access_token: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxMDgsImV4cCI6MTc4NjE5OTUxOH0.QpZHkUtDjdP2tdzy-eYSPF7qNHlBmO-VtTo4shUHxFg
-                    refresh_token: m44zLFclRVXFrvWzXcpd1_M8oEE1hdq_ucZovd3akC8
+                    access_token: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxOCwiZXhwIjoxNzg2MjAyMzUwfQ.GsOv93klcMiZ5dMLaHgfyslF18gdlP5O8v8pQGnULro
+                    refresh_token: O9sKVxLKai0XdLQXNIKYZhjd75jfhdBrHhwIx4VrTWI
                     user:
-                      id: 108
-                      email: celestina_paucek@mcclure.test
-                      name: Toney D'Amore
-                      cpf: '09387714772'
+                      id: 18
+                      email: elva_koss@mertz.test
+                      name: Rep. Errol Huels
+                      cpf: '03904395416'
         '401':
           description: Unauthorized
           content:
@@ -461,8 +461,8 @@ paths:
               examples:
                 example:
                   value:
-                    access_token: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxMTAsImV4cCI6MTc4NjE5OTUxOH0.UvY-A_SnxSEzyoi8A8sY2IXfnq1jXkHIOOxocTIMv_k
-                    refresh_token: sSTKOVB_7AjlCDiQZkcyB4gqyPzmGILb_UK1wp9tESg
+                    access_token: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyMCwiZXhwIjoxNzg2MjAyMzUwfQ.81VZN9RONs82fXBokKJSoKTQmCepR-3wCE8G1rBmCnk
+                    refresh_token: F1aq8ztoK54T46eauY4fc9pWILurTF0-LlN5vOOrBME
         '401':
           description: Unauthorized
           content:

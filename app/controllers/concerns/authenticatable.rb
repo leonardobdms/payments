@@ -3,9 +3,7 @@ module Authenticatable
 
   private
 
-  def current_user
-    @current_user
-  end
+  attr_reader :current_user
 
   def authenticate_user!
     return render_unauthorized if token_decoded.blank?
