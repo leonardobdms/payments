@@ -20,7 +20,7 @@ RSpec.describe "Api::V1::Merchants", type: :request do
               type: :object,
               properties: {
                 legal_name: { type: :string },
-                document: { type: :string }
+                document: { type: :string, pattern: '^\d{14}$', description: 'CNPJ (14 digits)' }
               },
               required: %w[legal_name document]
             }

@@ -20,7 +20,7 @@ paths:
               examples:
                 example:
                   value:
-                    id: 270
+                    id: 43
                     legal_name: Segunda Loja
                     document: '54550752000155'
                     status: active
@@ -61,6 +61,8 @@ paths:
                       type: string
                     document:
                       type: string
+                      pattern: "^\\d{14}$"
+                      description: CNPJ (14 digits)
                   required:
                   - legal_name
                   - document
@@ -80,17 +82,17 @@ paths:
               examples:
                 example:
                   value:
-                  - id: 271
-                    legal_name: Leffler, Schmidt and Quigley
-                    document: T2NG7TT1QLNN42
+                  - id: 44
+                    legal_name: Kozey-McCullough
+                    document: TIDDVLLWBZ9E20
                     status: active
                     account:
                       currency: BRL
                       available_balance_cents: 0
                       pending_balance_cents: 0
-                  - id: 272
-                    legal_name: Raynor, Ward and King
-                    document: U9V7JXT8VXF845
+                  - id: 45
+                    legal_name: Simonis-Murray
+                    document: CKHRSCANE2JJ10
                     status: active
                     account:
                       currency: BRL
@@ -125,9 +127,9 @@ paths:
               examples:
                 example:
                   value:
-                    id: 273
-                    legal_name: Osinski-Hauck
-                    document: 452AQ9WDJHKN15
+                    id: 46
+                    legal_name: Kihn-Johnston
+                    document: XIV3GW4ASJPF84
                     status: active
                     account:
                       currency: BRL
@@ -169,9 +171,9 @@ paths:
               examples:
                 example:
                   value:
-                    id: 275
+                    id: 48
                     legal_name: Novo Nome
-                    document: UPIC4CXRBAG737
+                    document: B5XAYCFIHBQR46
                     status: active
                     account:
                       currency: BRL
@@ -231,10 +233,10 @@ paths:
               examples:
                 example:
                   value:
-                    id: 1128
-                    email: henrietta@weissnat.example
-                    name: Joane Kerluke
-                    cpf: '04906160620'
+                    id: 102
+                    email: shaun.glover@hudson.example
+                    name: Debra Runolfsson
+                    cpf: '03219889573'
         '401':
           description: Unauthorized
           content:
@@ -258,10 +260,10 @@ paths:
               examples:
                 example:
                   value:
-                    id: 1129
-                    email: shakita.pacocha@gorczany.example
+                    id: 103
+                    email: ellis@marvin-will.test
                     name: Novo Nome
-                    cpf: '07746983812'
+                    cpf: '07495869585'
         '401':
           description: Unauthorized
           content:
@@ -291,14 +293,20 @@ paths:
                   properties:
                     email:
                       type: string
+                      format: email
                     name:
                       type: string
                     cpf:
                       type: string
+                      pattern: "^\\d{11}$"
                     password:
                       type: string
+                      format: password
+                      minLength: 8
                     password_confirmation:
                       type: string
+                      format: password
+                      minLength: 8
               required:
               - user
     delete:
@@ -337,13 +345,13 @@ paths:
               examples:
                 example:
                   value:
-                    access_token: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxMTMyLCJleHAiOjE3ODU4NjU5OTd9.sQ57t4Irj5Eiwc3BIIGr9PH0VVHC5Cc9u_2Xv2G9YoI
-                    refresh_token: EkKAFB3wzevXhjK_LXwjblArn4kGfaLDSHwmQwHazTk
+                    access_token: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxMDYsImV4cCI6MTc4NjE5OTUxOH0.BeF0ninblqy0jNoqM7OpjtpJAGBD3Qonit_Eim21gzc
+                    refresh_token: 3m8LHj5Qa-WuQj6r1h5BoBren1y71MoyLoySvncDAJg
                     user:
-                      id: 1132
-                      email: erlene@hudson-konopelski.example
+                      id: 106
+                      email: judith@labadie.example
                       name: Novo Usuario
-                      cpf: '08349494905'
+                      cpf: '03419603576'
         '422':
           description: Unprocessable Content
           content:
@@ -367,14 +375,20 @@ paths:
                   properties:
                     email:
                       type: string
+                      format: email
                     name:
                       type: string
                     cpf:
                       type: string
+                      pattern: "^\\d{11}$"
                     password:
                       type: string
+                      format: password
+                      minLength: 8
                     password_confirmation:
                       type: string
+                      format: password
+                      minLength: 8
                   required:
                   - email
                   - name
@@ -397,13 +411,13 @@ paths:
               examples:
                 example:
                   value:
-                    access_token: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxMTM0LCJleHAiOjE3ODU4NjU5OTd9.p6FiSJv2pxi7W0VfWi1kDzs7yWUwDCTQrfzir0FVBME
-                    refresh_token: HrUsb3e4qBfQZ1UfaveLOud_KxOcjBZ9m59fLYdtRsg
+                    access_token: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxMDgsImV4cCI6MTc4NjE5OTUxOH0.QpZHkUtDjdP2tdzy-eYSPF7qNHlBmO-VtTo4shUHxFg
+                    refresh_token: m44zLFclRVXFrvWzXcpd1_M8oEE1hdq_ucZovd3akC8
                     user:
-                      id: 1134
-                      email: tuan_leuschke@olson.example
-                      name: Georgianna Zemlak
-                      cpf: '09117047013'
+                      id: 108
+                      email: celestina_paucek@mcclure.test
+                      name: Toney D'Amore
+                      cpf: '09387714772'
         '401':
           description: Unauthorized
           content:
@@ -423,8 +437,11 @@ paths:
                   properties:
                     email:
                       type: string
+                      format: email
                     password:
                       type: string
+                      format: password
+                      minLength: 8
                   required:
                   - email
                   - password
@@ -444,8 +461,8 @@ paths:
               examples:
                 example:
                   value:
-                    access_token: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxMTM2LCJleHAiOjE3ODU4NjU5OTh9.15T9CNcrcLnN6VweVwe4Xuyt7SRm1txormhYBIG9lEg
-                    refresh_token: IbNZpZHbbKnpJpuJGsyDkwvVnri_D_PwAoQOQVKdIbs
+                    access_token: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxMTAsImV4cCI6MTc4NjE5OTUxOH0.UvY-A_SnxSEzyoi8A8sY2IXfnq1jXkHIOOxocTIMv_k
+                    refresh_token: sSTKOVB_7AjlCDiQZkcyB4gqyPzmGILb_UK1wp9tESg
         '401':
           description: Unauthorized
           content:

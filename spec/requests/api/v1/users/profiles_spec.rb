@@ -55,11 +55,11 @@ RSpec.describe "Api::V1::Users::Profiles", type: :request do
             user: {
               type: :object,
               properties: {
-                email: { type: :string },
+                email: { type: :string, format: :email },
                 name: { type: :string },
-                cpf: { type: :string },
-                password: { type: :string },
-                password_confirmation: { type: :string }
+                cpf: { type: :string, pattern: '^\d{11}$' },
+                password: { type: :string, format: :password, minLength: 8 },
+                password_confirmation: { type: :string, format: :password, minLength: 8 }
               }
             }
           },

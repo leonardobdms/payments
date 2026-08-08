@@ -18,8 +18,8 @@ RSpec.describe "Api::V1::Users::Sessions", type: :request do
             user: {
               type: :object,
               properties: {
-                email: { type: :string },
-                password: { type: :string }
+                email: { type: :string, format: :email },
+                password: { type: :string, format: :password, minLength: 8 }
               },
               required: %w[email password]
             }
