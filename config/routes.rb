@@ -18,7 +18,16 @@ Rails.application.routes.draw do
         resource :me, only: %i[show update destroy], controller: "me"
       end
 
-      resources :merchants, only: %i[index create show update]
+      resources :merchants, only: %i[index create show update] do
+        resources :charges, only: %i[index create], controller: "merchants/charges"
+      end
+
+      resources :charges, only: %i[show], param: :public_id do
+        member do
+          post :cancel
+          post :confirm
+        end
+      end
     end
   end
 end
