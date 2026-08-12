@@ -1,5 +1,6 @@
 class Account < ApplicationRecord
   belongs_to :merchant
+  has_many :ledger_entries, dependent: :destroy
 
   monetize :available_balance_cents
   monetize :pending_balance_cents

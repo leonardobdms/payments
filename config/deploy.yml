@@ -66,12 +66,6 @@ aliases:
   logs: app logs -f
   dbc: app exec --interactive --reuse "bin/rails dbconsole --include-password"
 
-# Use a persistent storage volume for sqlite database files and local Active Storage files.
-# Recommended to change this to a mounted volume path that is backed up off server.
-volumes:
-  - "payments_storage:/rails/storage"
-
-
 # Configure the image builder.
 builder:
   arch: amd64

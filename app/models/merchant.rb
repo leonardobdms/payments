@@ -1,6 +1,7 @@
 class Merchant < ApplicationRecord
   belongs_to :user
   has_one :account, dependent: :destroy
+  has_many :charges, dependent: :destroy
 
   validates :legal_name, presence: true
   validates :document, presence: true, uniqueness: true
