@@ -67,7 +67,7 @@ end
 
 gem "dotenv", "~> 3.2"
 
-gem "jwt", "~> 3.2"
+gem "jwt", "~> 3.3"
 
 gem "validators", "~> 3.4"
 
